@@ -1,0 +1,325 @@
+// lib/features/shows/presentation/screens/shows_screen.dart
+
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing/core/errors/failures.dart'; // Import Failure
+import 'package:ticketing/features/shows/data/models/show_model.dart'; // Import ShowModel
+import 'package:ticketing/features/shows/domain/usecases/get_shows_usecase.dart';
+import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
+import 'package:ticketing/features/shows/presentation/bloc/shows_event.dart';
+import 'package:ticketing/features/shows/presentation/bloc/shows_state.dart';
+
+@RoutePage()
+class ShowsScreen extends StatefulWidget {
+  const ShowsScreen({super.key});
+
+  @override
+  State<ShowsScreen> createState() => _ShowsScreenState();
+}
+
+class _ShowsScreenState extends State<ShowsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Dispatch the event to load shows when the screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ShowsBloc>().add(GetShowsEvent(params: GetShowsParams()));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Scaffold(
+      appBar: _buildAppBar(theme, isDark),
+      body: BlocBuilder<ShowsBloc, ShowsState>(
+        builder: (context, state) {
+          if (state is ShowsLoading) {
+            return _buildLoadingState(theme);
+          } else if (state is ShowsLoaded) {
+            return _buildLoadedState(theme, state.shows);
+          } else if (state is ShowsError) {
+            return _buildErrorState(theme, state.failure);
+          }
+          // Initial state or unhandled states
+          return _buildInitialState(theme);
+        },
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(ThemeData theme, bool isDark) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      surfaceTintColor: Colors.transparent,
+   
+      title: Text(
+        'Available Shows',
+        style: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.5,
+        ),
+      ),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.refresh,
+            color: theme.colorScheme.onSurface,
+          ),
+          onPressed: () {
+            // Allow users to refresh the show list
+            context
+                .read<ShowsBloc>()
+                .add(GetShowsEvent(params: GetShowsParams()));
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoadingState(ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor:
+                AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Loading shows...',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadedState(ThemeData theme, List<ShowModel> shows) {
+    if (shows.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.event_busy_outlined,
+                size: 80, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+            const SizedBox(height: 16),
+            Text(
+              'No shows available at the moment. Check back later!',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: shows.length,
+      itemBuilder: (context, index) {
+        final show = shows[index];
+        return _buildShowCard(theme, show);
+      },
+    );
+  }
+
+  Widget _buildShowCard(ThemeData theme, ShowModel show) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: () {
+          // Navigate to show details or perform an action
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Tapped on: ${show.name}')),
+          );
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                show.name,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.calendar_today_outlined,
+                      size: 18, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    show.date ?? 'No date',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Icon(Icons.access_time,
+                      size: 18, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    show.time ?? 'No time',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.location_on_outlined,
+                      size: 18, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Venue ID: ${show.venue ?? 'N/A'}', // Replace with actual venue name if you fetch it
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              if (show.banner != null && show.banner!.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    show.banner!,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 150,
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Center(
+                        child: Icon(Icons.broken_image,
+                            color:
+                                theme.colorScheme.onSurface.withOpacity(0.5)),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    show.showType ?? 'General',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(ThemeData theme, Failure failure) {
+    String errorMessage = 'An unknown error occurred.';
+    if (failure is ServerFailure) {
+      if (failure.badResponse != null) {
+        errorMessage = 'Server Error: ' '';
+      } else {
+        errorMessage = 'Failed to load shows due to a server issue.';
+      }
+    } else if (failure is CacheFailure) {
+      errorMessage = 'Failed to load shows from cache.';
+    } else
+      errorMessage = 'No internet connection. Please check your network.';
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 80, color: theme.colorScheme.error),
+            const SizedBox(height: 16),
+            Text(
+              'Oops! Something went wrong.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              errorMessage,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
+              ),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Retry fetching shows
+                context
+                    .read<ShowsBloc>()
+                    .add(GetShowsEvent(params: GetShowsParams()));
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Try Again'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: theme.colorScheme.onError,
+                backgroundColor: theme.colorScheme.error,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInitialState(ThemeData theme) {
+    // This state is usually very brief or just a simple placeholder
+    return Center(
+      child: Text(
+        'Welcome! Ready to find some shows?',
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: theme.colorScheme.onSurface.withOpacity(0.6),
+        ),
+      ),
+    );
+  }
+}
