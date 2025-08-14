@@ -47,6 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
           return const HomeInitialState();
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Add Event'),
+        icon: const Icon(Icons.add),
+        onPressed: () {
+          // Action for the floating action button, if needed
+        },
+     
+      ),
     );
   }
 }

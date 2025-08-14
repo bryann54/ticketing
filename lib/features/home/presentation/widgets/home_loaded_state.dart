@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:ticketing/common/helpers/app_router.gr.dart';
 import 'package:ticketing/features/home/presentation/widgets/featured_shows_section.dart';
 import 'package:ticketing/features/home/presentation/widgets/horizontal_list_section.dart';
-import 'package:ticketing/features/home/presentation/widgets/show_card.dart';
-import 'package:ticketing/features/home/presentation/widgets/venue_card.dart';
+import 'package:ticketing/features/shows/presentation/widgets/show_card.dart';
+import 'package:ticketing/features/venues/presentation/widgets/venue_card.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart';
 import 'package:ticketing/features/venues/data/models/venue_model.dart';
 

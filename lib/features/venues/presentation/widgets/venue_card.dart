@@ -1,59 +1,68 @@
+// lib/features/home/presentation/widgets/venue_card.dart
+
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:ticketing/common/helpers/app_router.gr.dart';
 import 'package:ticketing/features/venues/data/models/venue_model.dart';
 
 class VenueCard extends StatelessWidget {
   final VenueModel venue;
-  const VenueCard({super.key, required this.venue});
+  final VoidCallback? onTap; // Add onTap to the constructor
+
+  const VenueCard({
+    super.key,
+    required this.venue,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: () {
-          // Navigate to the SeatLayoutScreen
-          context.router.push(SeatLayoutRoute(venue: venue));
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                venue.name,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.place_outlined,
-                      size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      venue.address,
-                      style: theme.textTheme.bodyMedium?.copyWith(
+    return InkWell(
+      // Wrap the card in InkWell
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox(
+        width: 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                'https://placehold.co/150x100/4F3645/FFFFFF?text=${venue.abbreviation}',
+                height: 100,
+                width: 150,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 100,
+                  width: 150,
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  child: Center(
+                    child: Icon(Icons.location_city_outlined,
                         color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                            theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                   ),
-                ],
+                ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              venue.name,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              venue.address,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
       ),
     );
