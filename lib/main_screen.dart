@@ -6,6 +6,9 @@ import 'package:ticketing/core/di/injector.dart';
 import 'package:ticketing/features/account/presentation/bloc/account_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing/features/favourites/presentation/bloc/favourites_bloc.dart';
+import 'package:ticketing/features/favourites/presentation/bloc/favourites_event.dart';
+import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
 import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';
 
@@ -17,32 +20,36 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => getIt<HomeBloc>()),
         BlocProvider(create: (context) => getIt<ShowsBloc>()),
         BlocProvider(create: (context) => getIt<VenuesBloc>()),
-        BlocProvider(create: (context) => getIt<AccountBloc>())
+        BlocProvider(create: (context) => getIt<AccountBloc>()),
+        BlocProvider(
+            create: (context) =>
+                getIt<FavouritesBloc>()..add(LoadFavourites())),
       ],
       child: AutoTabsScaffold(
           lazyLoad: false,
           routes: const [
-            OverviewRoute(),
-            ShowsRoute(),
-            VenuesRoute(),
+            HomeRoute(),
+            FavouritesRoute(),
+            TicketsRoute(),
             AccountRoute()
           ],
           bottomNavigationBuilder: (_, tabsRouter) {
             return BottomNavigationBar(
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.dashboard),
-                  label: AppLocalizations.getString(context, 'overview'),
+                  icon: const Icon(Icons.home),
+                  label: AppLocalizations.getString(context, 'home'),
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.local_activity),
-                  label: AppLocalizations.getString(context, 'shows'),
+                  icon: const Icon(Icons.favorite),
+                  label: AppLocalizations.getString(context, 'favourites'),
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.location_city),
-                  label: AppLocalizations.getString(context, 'venues'),
+                  icon: const Icon(Icons.movie_filter),
+                  label: AppLocalizations.getString(context, 'tickets'),
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.account_circle),

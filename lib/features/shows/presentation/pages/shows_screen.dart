@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing/core/errors/failures.dart'; // Import Failure
+import 'package:ticketing/features/favourites/presentation/widgets/show_card.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart'; // Import ShowModel
 import 'package:ticketing/features/shows/domain/usecases/get_shows_usecase.dart';
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
@@ -56,7 +57,6 @@ class _ShowsScreenState extends State<ShowsScreen> {
       elevation: 0,
       backgroundColor: theme.scaffoldBackgroundColor,
       surfaceTintColor: Colors.transparent,
-   
       title: Text(
         'Available Shows',
         style: theme.textTheme.titleLarge?.copyWith(
@@ -87,7 +87,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
+          CircularProgressIndicator.adaptive(
             valueColor:
                 AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
           ),
@@ -95,7 +95,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
           Text(
             'Loading shows...',
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -110,13 +110,14 @@ class _ShowsScreenState extends State<ShowsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.event_busy_outlined,
-                size: 80, color: theme.colorScheme.onSurface.withOpacity(0.5)),
+                size: 80,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
             Text(
               'No shows available at the moment. Check back later!',
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -129,123 +130,10 @@ class _ShowsScreenState extends State<ShowsScreen> {
       itemCount: shows.length,
       itemBuilder: (context, index) {
         final show = shows[index];
-        return _buildShowCard(theme, show);
+        return ShowCard(
+          show: show,
+        );
       },
-    );
-  }
-
-  Widget _buildShowCard(ThemeData theme, ShowModel show) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        onTap: () {
-          // Navigate to show details or perform an action
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Tapped on: ${show.name}')),
-          );
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                show.name,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today_outlined,
-                      size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Text(
-                    show.date ?? 'No date',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Icon(Icons.access_time,
-                      size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Text(
-                    show.time ?? 'No time',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.location_on_outlined,
-                      size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Venue ID: ${show.venue ?? 'N/A'}', // Replace with actual venue name if you fetch it
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.8),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              if (show.banner != null && show.banner!.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    show.banner!,
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 150,
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      child: Center(
-                        child: Icon(Icons.broken_image,
-                            color:
-                                theme.colorScheme.onSurface.withOpacity(0.5)),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-              const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    show.showType ?? 'General',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.onSecondaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -282,7 +170,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
               errorMessage,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 24),
@@ -317,7 +205,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
       child: Text(
         'Welcome! Ready to find some shows?',
         style: theme.textTheme.bodyLarge?.copyWith(
-          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
       ),
     );

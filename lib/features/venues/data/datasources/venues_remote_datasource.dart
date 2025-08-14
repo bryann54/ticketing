@@ -1,4 +1,3 @@
-
 import 'package:ticketing/core/api_client/client_provider.dart' as apiClient;
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
 import 'package:ticketing/core/api_client/models/server_error.dart';

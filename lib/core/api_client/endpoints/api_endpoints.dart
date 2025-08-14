@@ -1,17 +1,13 @@
 // lib/core/api_client/endpoints/api_endpoints.dart
 
 class ApiEndpoints {
-  // Base URLs
-  static const String baseUrl =
-      'https://vijana-wa-benz-api.up.railway.app/api/v1';
-
   // Venues Endpoints
-  static const String venuesAll = '/venues/all/';
+  static const String venuesAll = '/venues/create/';
   static String venueById(String id) => '$venuesAll$id/';
   static const String venuesCreate = '/venues/create/';
 
   // Shows Endpoints
-  static const String showsAll = '/shows/all/';
+  static const String showsAll = '/shows/create/';
   static String showsById(String id) => '$showsAll$id/';
   static const String showsCreate = '/shows/create/';
   static const String showsTicketsBulkCreate = '/shows/tickets/bulk-create/';
