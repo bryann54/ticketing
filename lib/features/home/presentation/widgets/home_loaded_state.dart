@@ -22,31 +22,79 @@ class HomeLoadedState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Featured / Hero Section (e.g., top shows)
           FeaturedShowsSection(
             featuredShows: shows.isNotEmpty
                 ? shows.sublist(0, shows.length > 3 ? 3 : shows.length)
                 : [],
           ),
           const SizedBox(height: 24),
+
+          // Personalized for you / Recommended Shows
           HorizontalListSection(
             title: 'Your events',
             items: shows.sublist(shows.length > 3 ? 3 : 0),
-            itemBuilder: (context, item) => ShowCard(show: item as ShowModel),
+            itemBuilder: (context, item) {
+              final showModel = item as ShowModel;
+              final venueModel = venues.firstWhere(
+                (venue) => venue.id == showModel.venue,
+                orElse: () => VenueModel.empty(),
+              );
+
+              return ShowCard(
+                show: showModel,
+                onTap: () {
+                  if (venueModel.seatRows.isNotEmpty) {
+                    context.router.push(SeatSelectionRoute(
+                      title: '${showModel.name} at ${venueModel.name}',
+                      seatRows: venueModel.seatRows,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('No seat layout available for this show.'),
+                      ),
+                    );
+                  }
+                },
+              );
+            },
             onViewAll: () {
               context.router.push(const ShowsRoute());
             },
           ),
           const SizedBox(height: 24),
+
+          // Now Featuring / Popular Venues
           HorizontalListSection(
             title: 'Explore Top Venues',
             items: venues,
-            itemBuilder: (context, item) =>
-                VenueCard(venue: item as VenueModel),
+            itemBuilder: (context, item) {
+              final venueModel = item as VenueModel;
+              return VenueCard(
+                venue: venueModel,
+                onTap: () {
+                  if (venueModel.seatRows.isNotEmpty) {
+                    context.router.push(SeatSelectionRoute(
+                      title: venueModel.name,
+                      seatRows: venueModel.seatRows,
+                    ));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('No seat layout available for this venue.'),
+                      ),
+                    );
+                  }
+                },
+              );
+            },
             onViewAll: () {
               context.router.push(const VenuesRoute());
             },

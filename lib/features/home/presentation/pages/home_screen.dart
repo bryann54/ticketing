@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            return const HomeLoadingState();
+            return const HomeShimmerLoadingState();
           } else if (state is HomeLoaded) {
             return HomeLoadedState(shows: state.shows, venues: state.venues);
           } else if (state is HomeError) {

@@ -12,7 +12,7 @@ class HomeInitialState extends StatelessWidget {
       child: Text(
         'Welcome! Your personalized experience awaits.',
         style: theme.textTheme.bodyLarge?.copyWith(
-          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         ),
       ),
     );

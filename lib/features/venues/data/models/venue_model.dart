@@ -55,4 +55,19 @@ class VenueModel extends Equatable {
         abbreviation,
         seatRows,
       ];
+  static VenueModel empty() {
+    return VenueModel(
+      id: 0,
+      deleted: false,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(0),
+      deletedAt: null,
+      name: '',
+      address: '',
+      latitude: 0.0,
+      longitude: 0.0,
+      abbreviation: '',
+      seatRows: [],
+    );
+  }
 }

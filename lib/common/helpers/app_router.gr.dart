@@ -36,7 +36,7 @@ import 'package:ticketing/main_screen.dart' as _i4;
 /// [_i1.AccountScreen]
 class AccountRoute extends _i10.PageRouteInfo<void> {
   const AccountRoute({List<_i10.PageRouteInfo>? children})
-    : super(AccountRoute.name, initialChildren: children);
+      : super(AccountRoute.name, initialChildren: children);
 
   static const String name = 'AccountRoute';
 
@@ -52,7 +52,7 @@ class AccountRoute extends _i10.PageRouteInfo<void> {
 /// [_i2.FavouritesScreen]
 class FavouritesRoute extends _i10.PageRouteInfo<void> {
   const FavouritesRoute({List<_i10.PageRouteInfo>? children})
-    : super(FavouritesRoute.name, initialChildren: children);
+      : super(FavouritesRoute.name, initialChildren: children);
 
   static const String name = 'FavouritesRoute';
 
@@ -68,7 +68,7 @@ class FavouritesRoute extends _i10.PageRouteInfo<void> {
 /// [_i3.HomeScreen]
 class HomeRoute extends _i10.PageRouteInfo<void> {
   const HomeRoute({List<_i10.PageRouteInfo>? children})
-    : super(HomeRoute.name, initialChildren: children);
+      : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
@@ -84,7 +84,7 @@ class HomeRoute extends _i10.PageRouteInfo<void> {
 /// [_i4.MainScreen]
 class MainRoute extends _i10.PageRouteInfo<void> {
   const MainRoute({List<_i10.PageRouteInfo>? children})
-    : super(MainRoute.name, initialChildren: children);
+      : super(MainRoute.name, initialChildren: children);
 
   static const String name = 'MainRoute';
 
@@ -104,10 +104,10 @@ class SeatLayoutRoute extends _i10.PageRouteInfo<SeatLayoutRouteArgs> {
     required _i12.VenueModel venue,
     List<_i10.PageRouteInfo>? children,
   }) : super(
-         SeatLayoutRoute.name,
-         args: SeatLayoutRouteArgs(key: key, venue: venue),
-         initialChildren: children,
-       );
+          SeatLayoutRoute.name,
+          args: SeatLayoutRouteArgs(key: key, venue: venue),
+          initialChildren: children,
+        );
 
   static const String name = 'SeatLayoutRoute';
 
@@ -142,14 +142,14 @@ class SeatSelectionRoute extends _i10.PageRouteInfo<SeatSelectionRouteArgs> {
     required List<_i13.SeatRowModel> seatRows,
     List<_i10.PageRouteInfo>? children,
   }) : super(
-         SeatSelectionRoute.name,
-         args: SeatSelectionRouteArgs(
-           key: key,
-           title: title,
-           seatRows: seatRows,
-         ),
-         initialChildren: children,
-       );
+          SeatSelectionRoute.name,
+          args: SeatSelectionRouteArgs(
+            key: key,
+            title: title,
+            seatRows: seatRows,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'SeatSelectionRoute';
 
@@ -189,7 +189,7 @@ class SeatSelectionRouteArgs {
 /// [_i7.ShowsScreen]
 class ShowsRoute extends _i10.PageRouteInfo<void> {
   const ShowsRoute({List<_i10.PageRouteInfo>? children})
-    : super(ShowsRoute.name, initialChildren: children);
+      : super(ShowsRoute.name, initialChildren: children);
 
   static const String name = 'ShowsRoute';
 
@@ -205,7 +205,7 @@ class ShowsRoute extends _i10.PageRouteInfo<void> {
 /// [_i8.TicketsScreen]
 class TicketsRoute extends _i10.PageRouteInfo<void> {
   const TicketsRoute({List<_i10.PageRouteInfo>? children})
-    : super(TicketsRoute.name, initialChildren: children);
+      : super(TicketsRoute.name, initialChildren: children);
 
   static const String name = 'TicketsRoute';
 
@@ -221,7 +221,7 @@ class TicketsRoute extends _i10.PageRouteInfo<void> {
 /// [_i9.VenuesScreen]
 class VenuesRoute extends _i10.PageRouteInfo<void> {
   const VenuesRoute({List<_i10.PageRouteInfo>? children})
-    : super(VenuesRoute.name, initialChildren: children);
+      : super(VenuesRoute.name, initialChildren: children);
 
   static const String name = 'VenuesRoute';
 

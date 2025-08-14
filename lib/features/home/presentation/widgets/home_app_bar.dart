@@ -40,10 +40,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   decoration: InputDecoration(
                     hintText: 'Discover shows and venues...',
                     hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                     prefixIcon: Icon(Icons.search,
-                        color: theme.colorScheme.onSurface.withOpacity(0.8)),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.8)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -65,7 +66,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 child: IconButton(
                   icon: Icon(Icons.tune_rounded,
-                      color: theme.colorScheme.onSurface.withOpacity(0.8)),
+                      color:
+                          theme.colorScheme.onSurface.withValues(alpha: 0.8)),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Filter tapped!')),

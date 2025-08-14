@@ -32,7 +32,7 @@ class FeaturedShowsSection extends StatelessWidget {
                       'https://placehold.co/600x400/000000/FFFFFF?text=Featured+Show'),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3), BlendMode.darken),
+                      Colors.black.withValues(alpha: 0.3), BlendMode.darken),
                 ),
               ),
               child: Stack(
@@ -57,7 +57,7 @@ class FeaturedShowsSection extends StatelessWidget {
                         Text(
                           '${show.date ?? 'Upcoming'} - ${show.time ?? ''}',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
