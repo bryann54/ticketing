@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:ticketing/common/helpers/app_router.gr.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_event.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_state.dart';
@@ -48,12 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Add Event'),
+        label: const Text('create Event'),
         icon: const Icon(Icons.add),
         onPressed: () {
-          // Action for the floating action button, if needed
+          final state = context.read<HomeBloc>().state;
+          if (state is HomeLoaded) {
+            AutoRouter.of(context).push(AddShowRoute(venues: state.venues));
+          }
         },
-     
       ),
     );
   }

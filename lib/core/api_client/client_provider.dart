@@ -59,9 +59,25 @@ class ApiClient {
 
   Future<ApiResponse<T>> put<T>({
     required String url,
-    Map<String, dynamic>? payload,
+    required dynamic
+        payload, // Use dynamic to accommodate different payload types
+    String? id, // Add id for specific resource updates
   }) async {
-    return _request<T>(() => dio.put(url, data: payload));
+    // If id is provided, construct a URL with the ID
+    final updateUrl = id != null ? '$url/$id' : url;
+    return _request<T>(() => dio.put(updateUrl, data: payload));
+  }
+
+  Future<ApiResponse<void>> delete({
+    required String url,
+    required String id,
+  }) async {
+    try {
+      await dio.delete('$url/$id');
+      return Success(null);
+    } on DioException catch (error) {
+      return Failure(ServerError.withError(error: error));
+    }
   }
 
   Future<ApiResponse<T>> get<T>({

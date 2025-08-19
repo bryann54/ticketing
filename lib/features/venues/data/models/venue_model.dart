@@ -20,7 +20,7 @@ class VenueModel extends Equatable {
   final double longitude;
   final String abbreviation;
   @JsonKey(name: 'seat_rows')
-  final List<SeatRowModel> seatRows; // List of nested SeatRowModel
+  final List<SeatRowModel> seatRows;
 
   const VenueModel({
     required this.id,

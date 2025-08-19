@@ -71,11 +71,11 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.lazySingleton<_i354.FavouritesService>(() => _i354.FavouritesService());
-    gh.factory<_i697.VenuesScreen>(
-        () => _i697.VenuesScreen(key: gh<_i409.Key>()));
     gh.factory<_i298.HomeScreen>(() => _i298.HomeScreen(key: gh<_i409.Key>()));
     gh.factory<_i825.FavouritesScreen>(
         () => _i825.FavouritesScreen(key: gh<_i409.Key>()));
+    gh.factory<_i697.VenuesScreen>(
+        () => _i697.VenuesScreen(key: gh<_i409.Key>()));
     gh.factory<String>(
       () => registerModules.baseUrl,
       instanceName: 'BaseUrl',
@@ -121,8 +121,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i884.VenuesBloc>(
         () => _i884.VenuesBloc(gh<_i627.GetVenuesUsecase>()));
     gh.factory<_i202.HomeBloc>(() => _i202.HomeBloc(
-          gh<_i630.GetShowsUsecase>(),
-          gh<_i627.GetVenuesUsecase>(),
+          gh<_i153.ShowsRepository>(),
+          gh<_i7.VenuesRepository>(),
         ));
     return this;
   }

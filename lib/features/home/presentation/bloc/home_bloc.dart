@@ -1,44 +1,73 @@
-import 'dart:async';
+// lib/features/home/presentation/bloc/home_bloc.dart
 
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:ticketing/common/helpers/base_usecase.dart'; // For NoParams
 import 'package:ticketing/features/home/presentation/bloc/home_event.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_state.dart';
-import 'package:ticketing/features/shows/domain/usecases/get_shows_usecase.dart';
-import 'package:ticketing/features/venues/domain/usecases/get_venues_usecase.dart';
+import 'package:ticketing/features/shows/data/models/get_shows_query_model.dart';
+import 'package:ticketing/features/shows/domain/repositories/shows_repository.dart';
+import 'package:ticketing/features/venues/domain/repositories/venues_repository.dart';
 
 @injectable
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final GetShowsUsecase _getShowsUsecase;
-  final GetVenuesUsecase _getVenuesUsecase;
+  final ShowsRepository _showsRepository;
+  final VenuesRepository _venuesRepository;
 
-  HomeBloc(this._getShowsUsecase, this._getVenuesUsecase)
+  HomeBloc(this._showsRepository, this._venuesRepository)
       : super(HomeInitial()) {
     on<LoadHomeData>(_onLoadHomeData);
+    on<CreateShow>(_onCreateShow);
+    on<EditShow>(_onEditShow);
+    on<DeleteShow>(_onDeleteShow);
   }
 
-  FutureOr<void> _onLoadHomeData(
+  Future<void> _onLoadHomeData(
       LoadHomeData event, Emitter<HomeState> emit) async {
     emit(HomeLoading());
-
-    // Fetch shows and venues concurrently
-    final showsResult = await _getShowsUsecase.call(GetShowsParams());
-    final venuesResult = await _getVenuesUsecase.call(NoParams());
+    final showsResult = await _showsRepository.getShows(GetShowsQueryModel());
+    final venuesResult = await _venuesRepository.getVenues();
 
     showsResult.fold(
-      (showsFailure) {
-        emit(HomeError(failure: showsFailure));
-      },
+      (failure) => emit(HomeError(failure: failure)),
       (shows) {
         venuesResult.fold(
-          (venuesFailure) {
-            emit(HomeError(failure: venuesFailure));
-          },
-          (venues) {
-            emit(HomeLoaded(shows: shows, venues: venues));
-          },
+          (failure) => emit(HomeError(failure: failure)),
+          (venues) => emit(HomeLoaded(shows: shows, venues: venues)),
         );
+      },
+    );
+  }
+
+  Future<void> _onCreateShow(CreateShow event, Emitter<HomeState> emit) async {
+    emit(HomeLoading());
+    final result = await _showsRepository.createShow(event.newShow);
+    result.fold(
+      (failure) => emit(HomeError(failure: failure)),
+      (newShow) {
+        add(const LoadHomeData()); // Reload data after successful creation
+      },
+    );
+  }
+
+  Future<void> _onEditShow(EditShow event, Emitter<HomeState> emit) async {
+    emit(HomeLoading());
+    final result = await _showsRepository.editShow(event.updatedShow);
+    result.fold(
+      (failure) => emit(HomeError(failure: failure)),
+      (updatedShow) {
+        add(const LoadHomeData()); // Reload data after successful edit
+      },
+    );
+  }
+
+  Future<void> _onDeleteShow(DeleteShow event, Emitter<HomeState> emit) async {
+    emit(HomeLoading());
+    final result = await _showsRepository.deleteShow(event.showId.toString());
+    result.fold(
+      (failure) => emit(HomeError(failure: failure)),
+      (_) {
+        add(const LoadHomeData()); // Reload data after successful delete
       },
     );
   }

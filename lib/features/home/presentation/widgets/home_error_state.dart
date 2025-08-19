@@ -1,62 +1,64 @@
 // lib/features/home/presentation/widgets/home_error_state.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ticketing/common/utils/functions.dart';
-import 'package:ticketing/core/errors/failures.dart';
-import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
-import 'package:ticketing/features/home/presentation/bloc/home_event.dart';
+import 'package:ticketing/core/errors/failures.dart'; // Import your Failure class
 
 class HomeErrorState extends StatelessWidget {
   final Failure failure;
-  const HomeErrorState({super.key, required this.failure});
+  final VoidCallback? onRetry;
+
+  const HomeErrorState({
+    super.key,
+    required this.failure,
+    this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Extract the error message from the failure object.
+    // The message is typically a human-readable string.
+    String errorMessage = 'An unknown error occurred.';
+    if (failure is ServerFailure) {
+      errorMessage = failure.toString();
+    } else if (failure is ConnectionFailure) {
+      // This is the corrected line
+      errorMessage = 'Network error. Please check your connection.';
+    } else if (failure is CacheFailure) {
+      errorMessage = 'Failed to load data from cache.';
+    } else {
+      errorMessage = 'An unexpected error occurred.';
+    }
+
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 80, color: theme.colorScheme.error),
-            const SizedBox(height: 16),
-            Text(
-              'Oops! Could not load home data.',
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            color: theme.colorScheme.error,
+            size: 48,
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              errorMessage,
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.error,
+                color: theme.colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              getErrorMessage as String,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                context.read<HomeBloc>().add(const LoadHomeData());
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: theme.colorScheme.onError,
-                backgroundColor: theme.colorScheme.error,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+          ),
+          if (onRetry != null) ...[
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: const Text('Retry'),
             ),
           ],
-        ),
+        ],
       ),
     );
   }
