@@ -1,3 +1,5 @@
+// lib/features/shows/data/repositories/shows_repository_impl.dart
+
 import 'package:ticketing/core/api_client/client_provider.dart'
     as client_provider;
 import 'package:ticketing/core/errors/failures.dart';
@@ -19,10 +21,42 @@ class ShowsRepositoryImpl implements ShowsRepository {
       GetShowsQueryModel query) async {
     final result = await _remoteDatasource.getShows(query);
 
-    // Use pattern matching instead of fold
     return switch (result) {
       client_provider.Success<List<ShowModel>>(:final data) => Right(data),
       client_provider.Failure<List<ShowModel>>(:final error) =>
+        Left(ServerFailure(badResponse: error)),
+    };
+  }
+
+  @override
+  Future<Either<Failure, ShowModel>> createShow(ShowModel show) async {
+    final result = await _remoteDatasource.createShow(show);
+
+    return switch (result) {
+      client_provider.Success<ShowModel>(:final data) => Right(data),
+      client_provider.Failure<ShowModel>(:final error) =>
+        Left(ServerFailure(badResponse: error)),
+    };
+  }
+
+  @override
+  Future<Either<Failure, ShowModel>> editShow(ShowModel show) async {
+    final result = await _remoteDatasource.editShow(show);
+
+    return switch (result) {
+      client_provider.Success<ShowModel>(:final data) => Right(data),
+      client_provider.Failure<ShowModel>(:final error) =>
+        Left(ServerFailure(badResponse: error)),
+    };
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteShow(String showId) async {
+    final result = await _remoteDatasource.deleteShow(showId);
+
+    return switch (result) {
+      client_provider.Success<void>() => const Right(null),
+      client_provider.Failure<void>(:final error) =>
         Left(ServerFailure(badResponse: error)),
     };
   }

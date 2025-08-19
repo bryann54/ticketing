@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
+import 'package:flutter/material.dart' as _i409;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
@@ -23,6 +24,14 @@ import '../../features/account/domain/repositories/account_repository.dart'
 import '../../features/account/domain/usecases/change_language_usecase.dart'
     as _i993;
 import '../../features/account/presentation/bloc/account_bloc.dart' as _i708;
+import '../../features/favourites/data/services/favourites_service.dart'
+    as _i354;
+import '../../features/favourites/presentation/bloc/favourites_bloc.dart'
+    as _i624;
+import '../../features/favourites/presentation/pages/favourites)screen.dart'
+    as _i825;
+import '../../features/home/presentation/bloc/home_bloc.dart' as _i202;
+import '../../features/home/presentation/pages/home_screen.dart' as _i298;
 import '../../features/shows/data/datasources/shows_remote_datasource.dart'
     as _i65;
 import '../../features/shows/data/repositories/shows_repository_impl.dart'
@@ -39,6 +48,7 @@ import '../../features/venues/domain/repositories/venues_repository.dart'
     as _i7;
 import '../../features/venues/domain/usecases/get_venues_usecase.dart' as _i627;
 import '../../features/venues/presentation/bloc/venues_bloc.dart' as _i884;
+import '../../features/venues/presentation/pages/venues_screen.dart' as _i697;
 import '../api_client/client/dio_client.dart' as _i758;
 import '../api_client/client_provider.dart' as _i546;
 import '../storage/storage_preference_manager.dart' as _i934;
@@ -60,6 +70,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModules.prefs(),
       preResolve: true,
     );
+    gh.lazySingleton<_i354.FavouritesService>(() => _i354.FavouritesService());
+    gh.factory<_i298.HomeScreen>(() => _i298.HomeScreen(key: gh<_i409.Key>()));
+    gh.factory<_i825.FavouritesScreen>(
+        () => _i825.FavouritesScreen(key: gh<_i409.Key>()));
+    gh.factory<_i697.VenuesScreen>(
+        () => _i697.VenuesScreen(key: gh<_i409.Key>()));
     gh.factory<String>(
       () => registerModules.baseUrl,
       instanceName: 'BaseUrl',
@@ -68,6 +84,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModules.apiKey,
       instanceName: 'ApiKey',
     );
+    gh.factory<_i624.FavouritesBloc>(
+        () => _i624.FavouritesBloc(gh<_i354.FavouritesService>()));
     gh.lazySingleton<_i934.SharedPreferencesManager>(
         () => _i934.SharedPreferencesManager(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i29.AccountLocalDatasource>(() =>
@@ -102,6 +120,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
     gh.factory<_i884.VenuesBloc>(
         () => _i884.VenuesBloc(gh<_i627.GetVenuesUsecase>()));
+    gh.factory<_i202.HomeBloc>(() => _i202.HomeBloc(
+          gh<_i153.ShowsRepository>(),
+          gh<_i7.VenuesRepository>(),
+        ));
     return this;
   }
 }
