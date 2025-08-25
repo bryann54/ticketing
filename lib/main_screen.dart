@@ -32,7 +32,7 @@ class MainScreen extends StatelessWidget {
           lazyLoad: false,
           routes: const [
             HomeRoute(),
-            FavouritesRoute(),
+            VenuesRoute(),
             TicketsRoute(),
             AccountRoute()
           ],
@@ -44,8 +44,8 @@ class MainScreen extends StatelessWidget {
                   label: AppLocalizations.getString(context, 'home'),
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.favorite),
-                  label: AppLocalizations.getString(context, 'favourites'),
+                  icon: const Icon(Icons.location_city),  
+                  label: AppLocalizations.getString(context, 'venues'),
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.movie_filter),
