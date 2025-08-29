@@ -16,8 +16,17 @@
     <string>ticketing</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
-    
-    <!-- Image Picker Permissions - CORRECTLY ADDED ✅ -->
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>com.googleusercontent.apps.746648352405-fe9vpl3bpnehvkdge7i9qhn6vdkh3n4n</string>
+        </array>
+    </dict>
+</array>
     <key>NSCameraUsageDescription</key>
     <string>This app needs camera access to take photos for show banners</string>
     <key>NSPhotoLibraryUsageDescription</key>

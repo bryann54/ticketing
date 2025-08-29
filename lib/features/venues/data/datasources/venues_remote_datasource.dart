@@ -1,31 +1,27 @@
-import 'package:ticketing/core/api_client/client_provider.dart' as apiClient;
+// lib/features/venues/data/datasources/venues_remote_datasource.dart
+
+import 'package:ticketing/core/api_client/client/client/api_client.dart';
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
-import 'package:ticketing/core/api_client/models/server_error.dart';
-import 'package:ticketing/features/venues/data/models/venue_model.dart'; // Import VenueModel
+import 'package:ticketing/features/venues/data/models/venue_model.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class VenuesRemoteDatasource {
-  final apiClient.ApiClient _client;
+  final ApiClient _client;
 
   VenuesRemoteDatasource(this._client);
 
-  Future<apiClient.ApiResponse<List<VenueModel>>> getVenues() async {
-    // Assuming the API endpoint to get all venues is /venues/all/
+  Future<List<VenueModel>> getVenues() async {
+    // Make the API call directly. The ApiClient will throw an exception on error.
     final response = await _client.get<List<dynamic>>(
-      url: ApiEndpoints
-          .venuesAll, // Ensure this endpoint is correct in ApiEndpoints
+      url: ApiEndpoints.venuesAll,
     );
 
-    if (response is apiClient.Success<List<dynamic>>) {
-      final List<VenueModel> venues = response.data
-          .map((item) => VenueModel.fromJson(item as Map<String, dynamic>))
-          .toList();
-      return apiClient.Success(venues);
-    } else if (response is apiClient.Failure) {
-      return apiClient.Failure(ServerError());
-    }
+    // If the call succeeds, parse the raw JSON data into a list of VenueModels.
+    final List<VenueModel> venues = response
+        .map((item) => VenueModel.fromJson(item as Map<String, dynamic>))
+        .toList();
 
-    return apiClient.Failure(ServerError());
+    return venues;
   }
 }

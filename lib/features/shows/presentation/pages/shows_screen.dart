@@ -140,12 +140,8 @@ class _ShowsScreenState extends State<ShowsScreen> {
   Widget _buildErrorState(ThemeData theme, Failure failure) {
     String errorMessage = 'An unknown error occurred.';
     if (failure is ServerFailure) {
-      if (failure.badResponse != null) {
-        errorMessage = 'Server Error: ' '';
-      } else {
-        errorMessage = 'Failed to load shows due to a server issue.';
-      }
-    } else if (failure is CacheFailure) {
+      errorMessage = 'Server Error: ' '';
+        } else if (failure is CacheFailure) {
       errorMessage = 'Failed to load shows from cache.';
     } else
       errorMessage = 'No internet connection. Please check your network.';
