@@ -1,6 +1,6 @@
 // lib/features/venues/data/datasources/venues_remote_datasource.dart
 
-import 'package:ticketing/core/api_client/client/client/api_client.dart';
+import 'package:ticketing/core/api_client/client/api_client.dart';
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
 import 'package:ticketing/features/venues/data/models/venue_model.dart';
 import 'package:injectable/injectable.dart';

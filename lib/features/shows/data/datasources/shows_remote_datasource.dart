@@ -1,6 +1,6 @@
 // lib/features/shows/data/datasources/shows_remote_datasource.dart
 
-import 'package:ticketing/core/api_client/client/client/api_client.dart';
+import 'package:ticketing/core/api_client/client/api_client.dart';
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
 import 'package:ticketing/features/shows/data/models/get_shows_query_model.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart';

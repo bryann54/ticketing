@@ -20,23 +20,3 @@ class SignOutEvent extends AuthEvent {
 class CheckAuthStatusEvent extends AuthEvent {
   const CheckAuthStatusEvent();
 }
-
-// Add more events as needed, e.g.:
-// class SignInWithEmailAndPasswordEvent extends AuthEvent {
-//   final String email;
-//   final String password;
-//   const SignInWithEmailAndPasswordEvent({required this.email, required this.password});
-//   @override
-//   List<Object> get props => [email, password];
-// }
-
-// class SignUpEvent extends AuthEvent {
-//   final String email;
-//   final String password;
-//   final String firstName;
-//   final String lastName;
-//   // final File? profileImage; // If handling file uploads
-//   const SignUpEvent({required this.email, required this.password, required this.firstName, required this.lastName});
-//   @override
-//   List<Object> get props => [email, password, firstName, lastName];
-// }

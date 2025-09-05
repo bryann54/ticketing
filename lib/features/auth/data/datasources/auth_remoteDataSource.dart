@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:ticketing/core/api_client/client/client/api_client.dart';
-
+import 'package:ticketing/core/api_client/client/api_client.dart';
 import 'package:ticketing/core/errors/exceptions.dart';
 import 'package:ticketing/features/auth/data/models/user_model.dart';
-import 'package:ticketing/common/utils/pkce_generator.dart';
+// import 'package:ticketing/common/utils/pkce_generator.dart'; // ⭐ Remove this import ⭐
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // ⭐ Import dotenv ⭐
 
 abstract class AuthRemoteDataSource {
   Stream<UserModel?> get authStateChanges;
@@ -29,10 +30,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   AuthRemoteDataSourceImpl(this._apiClient, this._secureStorage);
 
-  static const _googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
-  static const _clientId =
-      '746648352405-79tnhinpfgfu2fji1ub9ghbt2edpol1n.apps.googleusercontent.com';
-  static const _redirectUri = 'com.nduko.ticketing:/oauth2redirect';
+  final String _googleAuthUrl =  dotenv.env['GOOGLE_AUTH_URI']!;
+  final String _clientId = dotenv.env['CLIENT_ID']!;
+  final String _redirectUri = dotenv.env['REDIRECT_URI']!; 
+  final String _staticCodeChallenge =
+      dotenv.env['CODE_CHALLENGE']!; 
+  final String _staticCodeVerifier = dotenv
+      .env['CODE_VERIFIER']!; 
 
   @override
   Stream<UserModel?> get authStateChanges async* {
@@ -71,7 +75,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on ServerException catch (e) {
       throw ServerException(message: e.message, statusCode: e.statusCode);
     } on ClientException catch (e) {
-      // Added for completeness
       throw ClientException(message: e.message);
     }
   }
@@ -92,7 +95,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await _apiClient.post<Map<String, dynamic>>(
         url: ApiEndpoints.authSignUp,
         payload: formData,
-        options: Options(contentType: 'multipart/form-data'),
+        options: Options(contentType: 'multipart/form-form-data'),
       );
       final accessToken = response['accessToken'] as String;
       await _secureStorage.write(key: 'accessToken', value: accessToken);
@@ -100,7 +103,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on ServerException catch (e) {
       throw ServerException(message: e.message, statusCode: e.statusCode);
     } on ClientException catch (e) {
-      // Added for completeness
       throw ClientException(message: e.message);
     }
   }
@@ -108,8 +110,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> signInWithGoogle() async {
     try {
-      final codeVerifier = generateCodeVerifier();
-      final codeChallenge = generateCodeChallenge(codeVerifier);
+      // ⭐ Use static values from .env instead of generating ⭐
+      final codeVerifier = _staticCodeVerifier;
+      final codeChallenge = _staticCodeChallenge;
 
       final authorizationUrl = '$_googleAuthUrl'
           '?client_id=$_clientId'
@@ -119,33 +122,57 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           '&code_challenge=$codeChallenge'
           '&code_challenge_method=S256';
 
+      debugPrint('AuthRemoteDataSource: Sending to Google: $authorizationUrl');
+
       final result = await FlutterWebAuth2.authenticate(
         url: authorizationUrl,
-        callbackUrlScheme: 'com.nduko.ticketing',
+        callbackUrlScheme:
+            _redirectUri.split(':')[0], // Use scheme part of redirectUri
       );
 
+      debugPrint('AuthRemoteDataSource: Received from Google: $result');
+
       final code = Uri.parse(result).queryParameters['code'];
+      final state = Uri.parse(result).queryParameters['state'];
+
+      debugPrint('AuthRemoteDataSource: Extracted code: $code');
+      if (state != null) {
+        debugPrint('AuthRemoteDataSource: Extracted state: $state');
+      }
+
       if (code == null) {
         throw  ClientException(
             message: 'Authorization code not received.');
       }
 
+      final payload = {
+        'code': code,
+        'code_verifier': codeVerifier, // ⭐ Send the static code_verifier ⭐
+        'redirect_uri': _redirectUri,
+      };
+
+      debugPrint('AuthRemoteDataSource: Sending payload to backend: $payload');
+      debugPrint(
+          'AuthRemoteDataSource: Backend endpoint: ${ApiEndpoints.authGoogleCallback}');
+
       final response = await _apiClient.post<Map<String, dynamic>>(
         url: ApiEndpoints.authGoogleCallback,
-        payload: {
-          'code': code,
-          'code_verifier': codeVerifier,
-          'redirect_uri': _redirectUri,
-        },
+        payload: payload,
       );
+
+      debugPrint('AuthRemoteDataSource: Received backend response: $response');
+
       final accessToken = response['accessToken'] as String;
       await _secureStorage.write(key: 'accessToken', value: accessToken);
       return UserModel.fromJson(response['user']);
     } on ClientException {
       rethrow;
     } on ServerException catch (e) {
+      debugPrint(
+          'AuthRemoteDataSource: ServerException: ${e.message} (Status: ${e.statusCode})');
       throw ServerException(message: e.message, statusCode: e.statusCode);
     } on Exception catch (e) {
+      debugPrint('AuthRemoteDataSource: General Exception: $e');
       throw ClientException(message: 'Google Sign-In failed: ${e.toString()}');
     }
   }
@@ -158,7 +185,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on ServerException catch (e) {
       throw ServerException(message: e.message, statusCode: e.statusCode);
     } on ClientException catch (e) {
-      // Added for completeness
       throw ClientException(message: e.message);
     }
   }
@@ -173,7 +199,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on ServerException catch (e) {
       throw ServerException(message: e.message, statusCode: e.statusCode);
     } on ClientException catch (e) {
-      // Added for completeness
       throw ClientException(message: e.message);
     }
   }
