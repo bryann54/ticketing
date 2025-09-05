@@ -1,12 +1,12 @@
 // lib/features/venues/data/repositories/venues_repository_impl.dart
 
 import 'package:ticketing/core/errors/failures.dart';
+import 'package:ticketing/core/errors/exceptions.dart';
 import 'package:ticketing/features/venues/data/datasources/venues_remote_datasource.dart';
 import 'package:ticketing/features/venues/data/models/venue_model.dart';
 import 'package:ticketing/features/venues/domain/repositories/venues_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
-import 'package:ticketing/core/api_client/client_provider.dart' as apiClient;
 
 @LazySingleton(as: VenuesRepository)
 class VenuesRepositoryImpl implements VenuesRepository {
@@ -16,17 +16,20 @@ class VenuesRepositoryImpl implements VenuesRepository {
 
   @override
   Future<Either<Failure, List<VenueModel>>> getVenues() async {
-    // Explicitly type the result from the remote datasource
-    final result = await _remoteDatasource.getVenues();
-
-    if (result is apiClient.Success<List<VenueModel>>) {
-      // Now 'result' is correctly typed, and we can access 'data'
-      return Right(result.data);
-    } else if (result is apiClient.Failure) {
-      // 'result' is correctly typed as a Failure, and we can access 'error'
-      return Left(ServerFailure());
+    try {
+      // Call the remote datasource. This can throw a ServerException.
+      final venues = await _remoteDatasource.getVenues();
+      // If the call is successful, return the data wrapped in a Right.
+      return Right(venues);
+    } on ServerException catch (e) {
+      // Catch the specific exception from the datasource and map it to a domain failure.
+      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+    } on ConnectionFailure catch (e) {
+      // This catch block handles network connectivity issues.
+      return Left(ConnectionFailure(message: e.message));
+    } catch (e) {
+      // Catch any other unexpected errors and return a general failure.
+      return Left(GeneralFailure(message: e.toString()));
     }
-
-    return Left(GeneralFailure(error: 'An unknown error occurred.'));
   }
 }

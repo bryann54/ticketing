@@ -11,6 +11,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
 import 'package:flutter/material.dart' as _i409;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
@@ -24,6 +25,13 @@ import '../../features/account/domain/repositories/account_repository.dart'
 import '../../features/account/domain/usecases/change_language_usecase.dart'
     as _i993;
 import '../../features/account/presentation/bloc/account_bloc.dart' as _i708;
+import '../../features/auth/data/datasources/auth_remoteDataSource.dart'
+    as _i167;
+import '../../features/auth/data/repositories/auth_repository_impl.dart'
+    as _i153;
+import '../../features/auth/domain/repositories/auth_epository.dart' as _i626;
+import '../../features/auth/domain/usecases/auth_usecases.dart' as _i46;
+import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
 import '../../features/favourites/data/services/favourites_service.dart'
     as _i354;
 import '../../features/favourites/presentation/bloc/favourites_bloc.dart'
@@ -49,8 +57,8 @@ import '../../features/venues/domain/repositories/venues_repository.dart'
 import '../../features/venues/domain/usecases/get_venues_usecase.dart' as _i627;
 import '../../features/venues/presentation/bloc/venues_bloc.dart' as _i884;
 import '../../features/venues/presentation/pages/venues_screen.dart' as _i697;
+import '../api_client/client/api_client.dart' as _i671;
 import '../api_client/client/dio_client.dart' as _i758;
-import '../api_client/client_provider.dart' as _i546;
 import '../storage/storage_preference_manager.dart' as _i934;
 import 'module_injector.dart' as _i759;
 
@@ -70,6 +78,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModules.prefs(),
       preResolve: true,
     );
+    gh.lazySingleton<_i558.FlutterSecureStorage>(
+        () => registerModules.secureStorage);
     gh.lazySingleton<_i354.FavouritesService>(() => _i354.FavouritesService());
     gh.factory<_i298.HomeScreen>(() => _i298.HomeScreen(key: gh<_i409.Key>()));
     gh.factory<_i825.FavouritesScreen>(
@@ -90,40 +100,61 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i934.SharedPreferencesManager(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i29.AccountLocalDatasource>(() =>
         _i29.AccountLocalDatasource(gh<_i934.SharedPreferencesManager>()));
-    gh.lazySingleton<_i546.ApiClient>(
-        () => _i546.ApiClient(gh<String>(instanceName: 'BaseUrl')));
+    gh.lazySingleton<_i671.ApiClient>(
+        () => _i671.ApiClient(gh<String>(instanceName: 'BaseUrl')));
     gh.lazySingleton<_i361.Dio>(
         () => registerModules.dio(gh<String>(instanceName: 'BaseUrl')));
-    gh.lazySingleton<_i910.VenuesRemoteDatasource>(
-        () => _i910.VenuesRemoteDatasource(gh<_i546.ApiClient>()));
-    gh.lazySingleton<_i65.ShowsRemoteDatasource>(
-        () => _i65.ShowsRemoteDatasource(gh<_i546.ApiClient>()));
     gh.lazySingleton<_i758.DioClient>(() => _i758.DioClient(
           gh<_i361.Dio>(),
           gh<String>(instanceName: 'BaseUrl'),
         ));
-    gh.lazySingleton<_i153.ShowsRepository>(
-        () => _i57.ShowsRepositoryImpl(gh<_i65.ShowsRemoteDatasource>()));
+    gh.lazySingleton<_i167.AuthRemoteDataSource>(
+        () => _i167.AuthRemoteDataSourceImpl(
+              gh<_i671.ApiClient>(),
+              gh<_i558.FlutterSecureStorage>(),
+            ));
     gh.lazySingleton<_i1067.AccountRepository>(
         () => _i857.AccountRepositoryImpl(gh<_i29.AccountLocalDatasource>()));
+    gh.lazySingleton<_i910.VenuesRemoteDatasource>(
+        () => _i910.VenuesRemoteDatasource(gh<_i671.ApiClient>()));
+    gh.lazySingleton<_i65.ShowsRemoteDatasource>(
+        () => _i65.ShowsRemoteDatasource(gh<_i671.ApiClient>()));
     gh.lazySingleton<_i993.ChangeLanguageUsecase>(
         () => _i993.ChangeLanguageUsecase(gh<_i1067.AccountRepository>()));
     gh.factory<_i708.AccountBloc>(
         () => _i708.AccountBloc(gh<_i993.ChangeLanguageUsecase>()));
-    gh.lazySingleton<_i630.GetShowsUsecase>(
-        () => _i630.GetShowsUsecase(gh<_i153.ShowsRepository>()));
     gh.lazySingleton<_i7.VenuesRepository>(
         () => _i1011.VenuesRepositoryImpl(gh<_i910.VenuesRemoteDatasource>()));
+    gh.lazySingleton<_i626.AuthRepository>(
+        () => _i153.AuthRepositoryImpl(gh<_i167.AuthRemoteDataSource>()));
     gh.lazySingleton<_i627.GetVenuesUsecase>(
         () => _i627.GetVenuesUsecase(gh<_i7.VenuesRepository>()));
-    gh.factory<_i204.ShowsBloc>(
-        () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
+    gh.lazySingleton<_i153.ShowsRepository>(
+        () => _i57.ShowsRepositoryImpl(gh<_i65.ShowsRemoteDatasource>()));
+    gh.lazySingleton<_i46.SignInWithEmailAndPasswordUseCase>(() =>
+        _i46.SignInWithEmailAndPasswordUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.SignUpWithEmailAndPasswordUseCase>(() =>
+        _i46.SignUpWithEmailAndPasswordUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.SignInWithGoogleUseCase>(
+        () => _i46.SignInWithGoogleUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.SignOutUseCase>(
+        () => _i46.SignOutUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.GetAuthStateChangesUseCase>(
+        () => _i46.GetAuthStateChangesUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.ResetPasswordUseCase>(
+        () => _i46.ResetPasswordUseCase(gh<_i626.AuthRepository>()));
     gh.factory<_i884.VenuesBloc>(
         () => _i884.VenuesBloc(gh<_i627.GetVenuesUsecase>()));
+    gh.factory<_i797.AuthBloc>(
+        () => _i797.AuthBloc(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i630.GetShowsUsecase>(
+        () => _i630.GetShowsUsecase(gh<_i153.ShowsRepository>()));
     gh.factory<_i202.HomeBloc>(() => _i202.HomeBloc(
           gh<_i153.ShowsRepository>(),
           gh<_i7.VenuesRepository>(),
         ));
+    gh.factory<_i204.ShowsBloc>(
+        () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
     return this;
   }
 }

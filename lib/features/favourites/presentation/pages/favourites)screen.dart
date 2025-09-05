@@ -279,13 +279,13 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
   Widget _buildErrorState(ThemeData theme, Failure failure) {
     String errorMessage = 'An unknown error occurred.';
     if (failure is ServerFailure) {
-      errorMessage = 'Server Error: ${failure.badResponse}';
+      errorMessage = 'Server Error: ${failure.message}';
     } else if (failure is ConnectionFailure) {
       errorMessage = 'No internet connection. Please check your network.';
     } else if (failure is ClientFailure) {
-      errorMessage = 'Client Error: ${failure.error}';
+      errorMessage = 'Client Error: ${ failure.message}';
     } else if (failure is GeneralFailure) {
-      errorMessage = 'Error: ${failure.error}';
+      errorMessage = 'Error: ${ failure.message}';
     }
 
     return Center(

@@ -1,6 +1,14 @@
 // lib/core/api_client/endpoints/api_endpoints.dart
 
 class ApiEndpoints {
+  // Auth Endpoints
+  static const String authSignIn = '/auth/login';
+  static const String authSignUp = '/auth/register';
+  static const String authGoogleCallback = '/auth/google/callback';
+  static const String authSignOut = '/auth/logout';
+  static const String authResetPassword = '/auth/password/reset';
+  static const String authMe = '/auth/me';
+
   // Venues Endpoints
   static const String venuesAll = '/venues/create/';
   static String venueById(String id) => '$venuesAll$id/';

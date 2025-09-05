@@ -21,7 +21,11 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
+  // Consistency for Split Screen Backgrounds - These are the fixed visual halves
+  static const Color visualDarkBackgroundHalf =
+      Color(0xFF1A1A1A); // Always the dark side of the split
+  static const Color visualLightBackgroundHalf =
+      Colors.white; // Always the light side of the split
   // Dark Theme Colors
   static const Color primaryColorDark = Color(0xFF2C5282);
   static const Color secondaryColorDark = Color(0xFF4299E1);
@@ -34,7 +38,9 @@ class AppColors {
   static const Color cardColorDark = Color(0xFF2D3748);
   static const Color dividerColorDark = Color(0xFF4A5568);
   static const Color shadowColorDark = Color(0x3D000000);
-
+  static const Color textLight = Color(0xFF6C757D);
+  static const Color textLightDark = Color(0xFFADB5BD);
+  static const Color textOnPrimary = Color(0xFFFFFFFF);
   // Dark Theme Gradient for Buttons
   static const LinearGradient darkButtonGradient = LinearGradient(
     colors: [primaryColorDark, accentColorDark],

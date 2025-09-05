@@ -27,6 +27,7 @@ class MainScreen extends StatelessWidget {
         BlocProvider(
             create: (context) =>
                 getIt<FavouritesBloc>()..add(LoadFavourites())),
+        // Removed AuthBloc from here as it's provided higher up
       ],
       child: AutoTabsScaffold(
           lazyLoad: false,
@@ -44,7 +45,7 @@ class MainScreen extends StatelessWidget {
                   label: AppLocalizations.getString(context, 'home'),
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.location_city),  
+                  icon: const Icon(Icons.location_city),
                   label: AppLocalizations.getString(context, 'venues'),
                 ),
                 BottomNavigationBarItem(
