@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ticketing/core/errors/failures.dart'; // Import Failure
-import 'package:ticketing/features/favourites/presentation/widgets/show_card.dart';
+import 'package:ticketing/features/shows/presentation/widgets/show_banner.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart'; // Import ShowModel
 import 'package:ticketing/features/shows/domain/usecases/get_shows_usecase.dart';
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
@@ -130,7 +130,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
       itemCount: shows.length,
       itemBuilder: (context, index) {
         final show = shows[index];
-        return ShowCard(
+        return ShowBanner(
           show: show,
         );
       },

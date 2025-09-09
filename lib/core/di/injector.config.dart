@@ -32,12 +32,6 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart'
 import '../../features/auth/domain/repositories/auth_epository.dart' as _i626;
 import '../../features/auth/domain/usecases/auth_usecases.dart' as _i46;
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
-import '../../features/favourites/data/services/favourites_service.dart'
-    as _i354;
-import '../../features/favourites/presentation/bloc/favourites_bloc.dart'
-    as _i624;
-import '../../features/favourites/presentation/pages/favourites)screen.dart'
-    as _i825;
 import '../../features/home/presentation/bloc/home_bloc.dart' as _i202;
 import '../../features/home/presentation/pages/home_screen.dart' as _i298;
 import '../../features/shows/data/datasources/shows_remote_datasource.dart'
@@ -80,10 +74,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => registerModules.secureStorage);
-    gh.lazySingleton<_i354.FavouritesService>(() => _i354.FavouritesService());
     gh.factory<_i298.HomeScreen>(() => _i298.HomeScreen(key: gh<_i409.Key>()));
-    gh.factory<_i825.FavouritesScreen>(
-        () => _i825.FavouritesScreen(key: gh<_i409.Key>()));
     gh.factory<_i697.VenuesScreen>(
         () => _i697.VenuesScreen(key: gh<_i409.Key>()));
     gh.factory<String>(
@@ -94,8 +85,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModules.apiKey,
       instanceName: 'ApiKey',
     );
-    gh.factory<_i624.FavouritesBloc>(
-        () => _i624.FavouritesBloc(gh<_i354.FavouritesService>()));
     gh.lazySingleton<_i934.SharedPreferencesManager>(
         () => _i934.SharedPreferencesManager(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i29.AccountLocalDatasource>(() =>

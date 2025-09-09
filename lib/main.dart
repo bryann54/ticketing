@@ -15,6 +15,12 @@ import 'package:provider/provider.dart';
 import 'package:ticketing/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ticketing/features/auth/presentation/bloc/auth_event.dart';
 
+// All other feature Blocs
+import 'package:ticketing/features/account/presentation/bloc/account_bloc.dart';
+import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
+import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
+import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -32,10 +38,17 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => localeProvider),
+        // Providing the core Blocs at the highest level of the app.
+        // This makes them available to all screens and routes.
         BlocProvider(
           create: (context) =>
               getIt<AuthBloc>()..add(const CheckAuthStatusEvent()),
         ),
+        BlocProvider(create: (context) => getIt<HomeBloc>()),
+        BlocProvider(create: (context) => getIt<ShowsBloc>()),
+        BlocProvider(create: (context) => getIt<VenuesBloc>()),
+        BlocProvider(create: (context) => getIt<AccountBloc>()),
+      
       ],
       child: MyApp(),
     ),

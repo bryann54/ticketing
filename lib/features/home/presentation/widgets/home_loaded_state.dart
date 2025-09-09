@@ -26,7 +26,7 @@ class HomeLoadedState extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Featured / Hero Section (e.g., top shows)
+          // Featured / Hero Section 
           FeaturedShowsSection(
             featuredShows: shows.isNotEmpty
                 ? shows.sublist(0, shows.length > 3 ? 3 : shows.length)
@@ -34,7 +34,7 @@ class HomeLoadedState extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Personalized for you / Recommended Shows
+          //your events
           HorizontalListSection(
             title: 'Your events',
             items: shows.sublist(shows.length > 3 ? 3 : 0),
