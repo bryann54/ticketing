@@ -36,7 +36,6 @@ class _VenuesScreenState extends State<VenuesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Available Venues', style: theme.textTheme.titleLarge),
-      
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -58,7 +57,7 @@ class _VenuesScreenState extends State<VenuesScreen> {
           },
         ),
       ),
-         floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(
         label: const Text('create venue'),
         icon: const Icon(Icons.add),
         onPressed: () {

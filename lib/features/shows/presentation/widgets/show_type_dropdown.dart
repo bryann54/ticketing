@@ -28,7 +28,7 @@ class ShowTypeDropdown extends StatelessWidget {
           decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.category,
-              color: Theme.of(context).primaryColor.withOpacity(0.7),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.7),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),

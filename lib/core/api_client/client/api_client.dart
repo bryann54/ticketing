@@ -99,8 +99,7 @@ class ApiClient {
           e.response!.data['message'] as String? ?? 'An error occurred';
       throw ServerException(message: errorMessage, statusCode: statusCode);
     } else {
-      throw  ServerException(
-          message: 'Connection failed. Check your network.');
+      throw ServerException(message: 'Connection failed. Check your network.');
     }
   }
 }

@@ -15,6 +15,7 @@ abstract class Failure extends Equatable {
 
 // General failures
 class ServerFailure extends Failure {
+  @override
   final String? message; // Change to nullable
   final int? statusCode;
 
@@ -30,6 +31,7 @@ class ServerFailure extends Failure {
 }
 
 class CacheFailure extends Failure {
+  @override
   final String message;
 
   const CacheFailure({this.message = 'Failed to retrieve data from cache.'});
@@ -42,6 +44,7 @@ class CacheFailure extends Failure {
 }
 
 class ConnectionFailure extends Failure {
+  @override
   final String message;
 
   const ConnectionFailure(
@@ -56,6 +59,7 @@ class ConnectionFailure extends Failure {
 }
 
 class ClientFailure extends Failure {
+  @override
   final String message;
 
   const ClientFailure({required this.message});
@@ -68,6 +72,7 @@ class ClientFailure extends Failure {
 }
 
 class GeneralFailure extends Failure {
+  @override
   final String message;
 
   const GeneralFailure({this.message = 'An unexpected error occurred.'});
@@ -80,6 +85,7 @@ class GeneralFailure extends Failure {
 }
 
 class ValidationFailure extends Failure {
+  @override
   final String message;
 
   const ValidationFailure(this.message);
@@ -93,6 +99,7 @@ class ValidationFailure extends Failure {
 
 // Specific HTTP failures
 class UnauthorizedFailure extends Failure {
+  @override
   final String message;
   const UnauthorizedFailure(
       {this.message = 'Authentication failed. Please check your credentials.'});
@@ -103,6 +110,7 @@ class UnauthorizedFailure extends Failure {
 }
 
 class ForbiddenFailure extends Failure {
+  @override
   final String message;
   const ForbiddenFailure(
       {this.message = 'You do not have permission to access this resource.'});

@@ -28,7 +28,7 @@ class GoogleSignInButton extends StatelessWidget {
               backgroundColor: Colors.white,
               foregroundColor: const Color(0xFF1F1F1F),
               elevation: 1,
-              shadowColor: Colors.black.withOpacity(0.15),
+              shadowColor: Colors.black.withValues(alpha: 0.15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
                 side: BorderSide(
@@ -68,7 +68,7 @@ class GoogleSignInButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // Official Google "G" logo as SVG path
-                      Container(
+                      SizedBox(
                         width: 20,
                         height: 20,
                         child: CustomPaint(

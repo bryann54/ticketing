@@ -48,7 +48,6 @@ void main() async {
         BlocProvider(create: (context) => getIt<ShowsBloc>()),
         BlocProvider(create: (context) => getIt<VenuesBloc>()),
         BlocProvider(create: (context) => getIt<AccountBloc>()),
-      
       ],
       child: MyApp(),
     ),

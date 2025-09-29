@@ -141,7 +141,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
     String errorMessage = 'An unknown error occurred.';
     if (failure is ServerFailure) {
       errorMessage = 'Server Error: ' '';
-        } else if (failure is CacheFailure) {
+    } else if (failure is CacheFailure) {
       errorMessage = 'Failed to load shows from cache.';
     } else
       errorMessage = 'No internet connection. Please check your network.';

@@ -26,7 +26,7 @@ class HomeLoadedState extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Featured / Hero Section 
+          // Featured / Hero Section
           FeaturedShowsSection(
             featuredShows: shows.isNotEmpty
                 ? shows.sublist(0, shows.length > 3 ? 3 : shows.length)

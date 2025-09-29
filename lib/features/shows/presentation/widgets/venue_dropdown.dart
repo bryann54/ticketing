@@ -31,7 +31,7 @@ class VenueDropdown extends StatelessWidget {
           decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.location_on,
-              color: Theme.of(context).primaryColor.withOpacity(0.7),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.7),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),

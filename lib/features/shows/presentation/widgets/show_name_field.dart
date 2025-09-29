@@ -27,7 +27,7 @@ class ShowNameField extends StatelessWidget {
             hintText: 'Enter show name',
             prefixIcon: Icon(
               Icons.event,
-              color: Theme.of(context).primaryColor.withOpacity(0.7),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.7),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),

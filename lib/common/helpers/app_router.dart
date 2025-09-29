@@ -20,7 +20,7 @@ class AppRouter extends RootStackRouter {
             AutoRoute(page: AccountRoute.page, path: 'account'),
           ],
         ),
-      
+
         AutoRoute(page: ShowsRoute.page, path: '/shows'),
         AutoRoute(page: SeatLayoutRoute.page, path: '/seat-layout'),
         AutoRoute(page: SeatSelectionRoute.page, path: '/seat-selection'),

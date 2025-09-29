@@ -24,7 +24,7 @@ class ShowBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      shadowColor: Colors.black.withOpacity(0.05),
+      shadowColor: Colors.black.withValues(alpha: 0.05),
       margin: _margin,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_borderRadius),
@@ -92,7 +92,10 @@ class _LoadingImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+      color: Theme.of(context)
+          .colorScheme
+          .surfaceContainerHighest
+          .withValues(alpha: 0.3),
       child: Center(
         child: SizedBox(
           width: 16,
@@ -100,7 +103,7 @@ class _LoadingImage extends StatelessWidget {
           child: CircularProgressIndicator.adaptive(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation(
-              Theme.of(context).colorScheme.primary.withOpacity(0.6),
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
             ),
           ),
         ),
@@ -113,10 +116,11 @@ class _ErrorImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.1),
+      color:
+          Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.1),
       child: Icon(
         Icons.broken_image_rounded,
-        color: Theme.of(context).colorScheme.error.withOpacity(0.6),
+        color: Theme.of(context).colorScheme.error.withValues(alpha: 0.6),
         size: 20,
       ),
     );
@@ -128,19 +132,19 @@ class _PlaceholderImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withOpacity(0.08),
+        color: AppColors.primaryColor.withValues(alpha: 0.08),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primaryColor.withOpacity(0.1),
-            AppColors.primaryColor.withOpacity(0.05),
+            AppColors.primaryColor.withValues(alpha: 0.1),
+            AppColors.primaryColor.withValues(alpha: 0.05),
           ],
         ),
       ),
       child: Icon(
         Icons.theaters_rounded,
-        color: AppColors.primaryColor.withOpacity(0.7),
+        color: AppColors.primaryColor.withValues(alpha: 0.7),
         size: 24,
       ),
     );
@@ -190,7 +194,7 @@ class _MetadataRow extends StatelessWidget {
               color: Theme.of(context)
                   .colorScheme
                   .onSurfaceVariant
-                  .withOpacity(0.7),
+                  .withValues(alpha: 0.7),
               fontStyle: FontStyle.italic,
             ),
       );
@@ -250,10 +254,10 @@ class _TypeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: config.color.withOpacity(0.1),
+        color: config.color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: config.color.withOpacity(0.3),
+          color: config.color.withValues(alpha: 0.3),
           width: 0.5,
         ),
       ),
@@ -289,7 +293,10 @@ class _TrailingSection extends StatelessWidget {
     if (ticketCount == 0) {
       return Icon(
         Icons.chevron_right_rounded,
-        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+        color: Theme.of(context)
+            .colorScheme
+            .onSurfaceVariant
+            .withValues(alpha: 0.5),
         size: 20,
       );
     }
@@ -301,7 +308,7 @@ class _TrailingSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.1),
+            color: AppColors.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -319,7 +326,7 @@ class _TrailingSection extends StatelessWidget {
                 color: Theme.of(context)
                     .colorScheme
                     .onSurfaceVariant
-                    .withOpacity(0.7),
+                    .withValues(alpha: 0.7),
                 fontSize: 10,
               ),
         ),

@@ -30,13 +30,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   AuthRemoteDataSourceImpl(this._apiClient, this._secureStorage);
 
-  final String _googleAuthUrl =  dotenv.env['GOOGLE_AUTH_URI']!;
+  final String _googleAuthUrl = dotenv.env['GOOGLE_AUTH_URI']!;
   final String _clientId = dotenv.env['CLIENT_ID']!;
-  final String _redirectUri = dotenv.env['REDIRECT_URI']!; 
-  final String _staticCodeChallenge =
-      dotenv.env['CODE_CHALLENGE']!; 
-  final String _staticCodeVerifier = dotenv
-      .env['CODE_VERIFIER']!; 
+  final String _redirectUri = dotenv.env['REDIRECT_URI']!;
+  final String _staticCodeChallenge = dotenv.env['CODE_CHALLENGE']!;
+  final String _staticCodeVerifier = dotenv.env['CODE_VERIFIER']!;
 
   @override
   Stream<UserModel?> get authStateChanges async* {
@@ -141,8 +139,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       if (code == null) {
-        throw  ClientException(
-            message: 'Authorization code not received.');
+        throw ClientException(message: 'Authorization code not received.');
       }
 
       final payload = {
