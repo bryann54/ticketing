@@ -1,3 +1,5 @@
+// lib/common/helpers/app_router.dart
+
 import 'package:auto_route/auto_route.dart';
 import 'package:ticketing/common/helpers/app_router.gr.dart';
 
@@ -5,10 +7,22 @@ import 'package:ticketing/common/helpers/app_router.gr.dart';
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
+        // Splash screen as the initial route
+        AutoRoute(
+          page: SplashRoute.page,
+          initial: true,
+        ),
+
+        // Auth screens
+        AutoRoute(page: LoginRoute.page, path: '/login'),
+        AutoRoute(page: RegisterRoute.page, path: '/register'),
+        AutoRoute(
+            page: MerchantOnboardingRoute.page, path: '/merchant-onboarding'),
+
         // Main route with tabs
         AutoRoute(
           page: MainRoute.page,
-          initial: true,
+          path: '/main',
           children: [
             AutoRoute(
               page: HomeRoute.page,
@@ -21,6 +35,7 @@ class AppRouter extends RootStackRouter {
           ],
         ),
 
+        // Other routes
         AutoRoute(page: ShowsRoute.page, path: '/shows'),
         AutoRoute(page: SeatLayoutRoute.page, path: '/seat-layout'),
         AutoRoute(page: SeatSelectionRoute.page, path: '/seat-selection'),

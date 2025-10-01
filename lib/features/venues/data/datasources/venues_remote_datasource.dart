@@ -12,12 +12,10 @@ class VenuesRemoteDatasource {
   VenuesRemoteDatasource(this._client);
 
   Future<List<VenueModel>> getVenues() async {
-    // Make the API call directly. The ApiClient will throw an exception on error.
     final response = await _client.get<List<dynamic>>(
-      url: ApiEndpoints.venuesAll,
+      url: ApiEndpoints.venuesCreate,
     );
 
-    // If the call succeeds, parse the raw JSON data into a list of VenueModels.
     final List<VenueModel> venues = response
         .map((item) => VenueModel.fromJson(item as Map<String, dynamic>))
         .toList();

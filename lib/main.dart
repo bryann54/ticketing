@@ -1,3 +1,5 @@
+// lib/main.dart
+
 import 'package:ticketing/common/helpers/app_router.dart';
 import 'package:ticketing/common/res/l10n.dart';
 import 'package:ticketing/common/notifiers/locale_provider.dart';
@@ -13,10 +15,10 @@ import 'package:provider/provider.dart';
 
 // Auth Bloc and Events
 import 'package:ticketing/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:ticketing/features/auth/presentation/bloc/auth_event.dart';
 
 // All other feature Blocs
 import 'package:ticketing/features/account/presentation/bloc/account_bloc.dart';
+import 'package:ticketing/features/auth/presentation/bloc/merchant_bloc.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
 import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';
@@ -38,12 +40,10 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => localeProvider),
-        // Providing the core Blocs at the highest level of the app.
-        // This makes them available to all screens and routes.
         BlocProvider(
-          create: (context) =>
-              getIt<AuthBloc>()..add(const CheckAuthStatusEvent()),
+          create: (context) => getIt<AuthBloc>(), 
         ),
+        BlocProvider(create: (context) => getIt<MerchantBloc>()),
         BlocProvider(create: (context) => getIt<HomeBloc>()),
         BlocProvider(create: (context) => getIt<ShowsBloc>()),
         BlocProvider(create: (context) => getIt<VenuesBloc>()),

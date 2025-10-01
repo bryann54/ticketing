@@ -1,65 +1,58 @@
 // lib/features/auth/presentation/widgets/auth_header.dart
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AuthHeader extends StatelessWidget {
-  const AuthHeader({super.key});
+  final String title;
+  final String subtitle;
+
+  const AuthHeader({
+    super.key,
+    required this.title,
+    required this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // App Icon/Logo placeholder
+        // App Logo/Icon
         Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF667EEA),
-                Color(0xFF764BA2),
-              ],
+          width: 60,
+          height: 60,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            image: const DecorationImage(
+              image: AssetImage('assets/tickoyako.png'),
+              fit: BoxFit.cover,
             ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 16,
-                offset: Offset(0, 8),
-              ),
-            ],
           ),
-          child: Icon(
-            Icons.confirmation_number_outlined,
-            size: 40,
-            color: Colors.white,
-          ),
+        
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
 
+        // Title
         Text(
-          'Welcome to Ticketing',
-          style: theme.textTheme.headlineMedium?.copyWith(
+          title,
+          style: GoogleFonts.poppins(
+            fontSize: 32,
             fontWeight: FontWeight.w700,
-            color: isDark ? Colors.white : Color(0xFF1F1F1F),
-            letterSpacing: -0.5,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
 
+        // Subtitle
         Text(
-          'Your gateway to amazing events',
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: isDark ? Colors.grey[300] : Color(0xFF5F6368),
-            height: 1.4,
+          subtitle,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            fontWeight: FontWeight.w400,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     );
