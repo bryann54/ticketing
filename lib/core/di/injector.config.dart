@@ -27,11 +27,20 @@ import '../../features/account/domain/usecases/change_language_usecase.dart'
 import '../../features/account/presentation/bloc/account_bloc.dart' as _i708;
 import '../../features/auth/data/datasources/auth_remoteDataSource.dart'
     as _i167;
+import '../../features/auth/data/datasources/merchant_remote_datasource.dart'
+    as _i306;
 import '../../features/auth/data/repositories/auth_repository_impl.dart'
     as _i153;
+import '../../features/auth/data/repositories/merchant_repository_impl.dart'
+    as _i52;
 import '../../features/auth/domain/repositories/auth_epository.dart' as _i626;
+import '../../features/auth/domain/repositories/merchant_repository.dart'
+    as _i877;
 import '../../features/auth/domain/usecases/auth_usecases.dart' as _i46;
+import '../../features/auth/domain/usecases/create_merchant_usecase.dart'
+    as _i150;
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
+import '../../features/auth/presentation/bloc/merchant_bloc.dart' as _i178;
 import '../../features/home/presentation/bloc/home_bloc.dart' as _i202;
 import '../../features/home/presentation/pages/home_screen.dart' as _i298;
 import '../../features/shows/data/datasources/shows_remote_datasource.dart'
@@ -93,6 +102,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i671.ApiClient(gh<String>(instanceName: 'BaseUrl')));
     gh.lazySingleton<_i361.Dio>(
         () => registerModules.dio(gh<String>(instanceName: 'BaseUrl')));
+    gh.lazySingleton<_i306.MerchantRemoteDatasource>(
+        () => _i306.MerchantRemoteDatasourceImpl(
+              gh<_i671.ApiClient>(),
+              gh<_i558.FlutterSecureStorage>(),
+            ));
     gh.lazySingleton<_i758.DioClient>(() => _i758.DioClient(
           gh<_i361.Dio>(),
           gh<String>(instanceName: 'BaseUrl'),
@@ -118,30 +132,50 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i153.AuthRepositoryImpl(gh<_i167.AuthRemoteDataSource>()));
     gh.lazySingleton<_i627.GetVenuesUsecase>(
         () => _i627.GetVenuesUsecase(gh<_i7.VenuesRepository>()));
+    gh.lazySingleton<_i877.MerchantRepository>(() =>
+        _i52.MerchantRepositoryImpl(gh<_i306.MerchantRemoteDatasource>()));
+    gh.lazySingleton<_i150.CreateMerchantUseCase>(
+        () => _i150.CreateMerchantUseCase(gh<_i877.MerchantRepository>()));
     gh.lazySingleton<_i153.ShowsRepository>(
         () => _i57.ShowsRepositoryImpl(gh<_i65.ShowsRemoteDatasource>()));
     gh.lazySingleton<_i46.SignInWithEmailAndPasswordUseCase>(() =>
         _i46.SignInWithEmailAndPasswordUseCase(gh<_i626.AuthRepository>()));
     gh.lazySingleton<_i46.SignUpWithEmailAndPasswordUseCase>(() =>
         _i46.SignUpWithEmailAndPasswordUseCase(gh<_i626.AuthRepository>()));
-    gh.lazySingleton<_i46.SignInWithGoogleUseCase>(
-        () => _i46.SignInWithGoogleUseCase(gh<_i626.AuthRepository>()));
     gh.lazySingleton<_i46.SignOutUseCase>(
         () => _i46.SignOutUseCase(gh<_i626.AuthRepository>()));
     gh.lazySingleton<_i46.GetAuthStateChangesUseCase>(
         () => _i46.GetAuthStateChangesUseCase(gh<_i626.AuthRepository>()));
     gh.lazySingleton<_i46.ResetPasswordUseCase>(
         () => _i46.ResetPasswordUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.ChangePasswordUseCase>(
+        () => _i46.ChangePasswordUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.VerifyOtpUseCase>(
+        () => _i46.VerifyOtpUseCase(gh<_i626.AuthRepository>()));
+    gh.lazySingleton<_i46.SendOtpUseCase>(
+        () => _i46.SendOtpUseCase(gh<_i626.AuthRepository>()));
     gh.factory<_i884.VenuesBloc>(
         () => _i884.VenuesBloc(gh<_i627.GetVenuesUsecase>()));
-    gh.factory<_i797.AuthBloc>(
-        () => _i797.AuthBloc(gh<_i626.AuthRepository>()));
+    gh.factory<_i797.AuthBloc>(() => _i797.AuthBloc(
+          signInWithEmailAndPassword:
+              gh<_i46.SignInWithEmailAndPasswordUseCase>(),
+          signUpWithEmailAndPassword:
+              gh<_i46.SignUpWithEmailAndPasswordUseCase>(),
+          signOutUseCase: gh<_i46.SignOutUseCase>(),
+          getAuthStateChanges: gh<_i46.GetAuthStateChangesUseCase>(),
+          resetPasswordUseCase: gh<_i46.ResetPasswordUseCase>(),
+          changePasswordUseCase: gh<_i46.ChangePasswordUseCase>(),
+          verifyOtpUseCase: gh<_i46.VerifyOtpUseCase>(),
+          sendOtpUseCase: gh<_i46.SendOtpUseCase>(),
+        ));
     gh.lazySingleton<_i630.GetShowsUsecase>(
         () => _i630.GetShowsUsecase(gh<_i153.ShowsRepository>()));
     gh.factory<_i202.HomeBloc>(() => _i202.HomeBloc(
           gh<_i153.ShowsRepository>(),
           gh<_i7.VenuesRepository>(),
         ));
+    gh.factory<_i178.MerchantBloc>(
+        () => _i178.MerchantBloc(gh<_i150.CreateMerchantUseCase>()));
     gh.factory<_i204.ShowsBloc>(
         () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
     return this;
