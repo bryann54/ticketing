@@ -5,12 +5,12 @@ import 'package:injectable/injectable.dart';
 import 'package:ticketing/core/api_client/client/api_client.dart';
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
 import 'package:ticketing/core/errors/exceptions.dart';
-import 'package:ticketing/features/auth/data/models/merchant_model.dart';
+import 'package:ticketing/features/merchant/data/models/merchant_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class MerchantRemoteDatasource {
   Future<MerchantModel> createMerchant({
-    required String businessName,
+    required String name,
     required String businessEmail,
     required String businessTelephone,
   });
@@ -25,7 +25,7 @@ class MerchantRemoteDatasourceImpl implements MerchantRemoteDatasource {
 
   @override
   Future<MerchantModel> createMerchant({
-    required String businessName,
+    required String name,
     required String businessEmail,
     required String businessTelephone,
   }) async {
@@ -41,13 +41,14 @@ class MerchantRemoteDatasourceImpl implements MerchantRemoteDatasource {
       final response = await _client.post<Map<String, dynamic>>(
         url: ApiEndpoints.authMerchantsCreate,
         payload: {
-          'business_name': businessName,
-          'business_email': businessEmail,
-          'business_telephone': businessTelephone,
+          'name': name,
+          'email': businessEmail,
+          'phone_number': businessTelephone,
         },
         options: Options(
           headers: {
-            'Authorization': 'Bearer $accessToken',
+            'Authorization':
+                'Token $accessToken',
           },
         ),
       );

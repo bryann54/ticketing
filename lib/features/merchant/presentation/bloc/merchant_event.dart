@@ -10,16 +10,16 @@ abstract class MerchantEvent extends Equatable {
 }
 
 class CreateMerchantEvent extends MerchantEvent {
-  final String businessName;
+  final String name;
   final String businessEmail;
   final String businessTelephone;
 
   const CreateMerchantEvent({
-    required this.businessName,
+    required this.name,
     required this.businessEmail,
     required this.businessTelephone,
   });
 
   @override
-  List<Object> get props => [businessName, businessEmail, businessTelephone];
+  List<Object> get props => [name, businessEmail, businessTelephone];
 }

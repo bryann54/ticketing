@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ticketing/features/auth/presentation/bloc/merchant_bloc.dart';
-import 'package:ticketing/features/auth/presentation/bloc/merchant_event.dart';
-import 'package:ticketing/features/auth/presentation/bloc/merchant_state.dart';
+import 'package:ticketing/features/merchant/presentation/bloc/merchant_bloc.dart';
+import 'package:ticketing/features/merchant/presentation/bloc/merchant_event.dart';
+import 'package:ticketing/features/merchant/presentation/bloc/merchant_state.dart';
 import 'package:ticketing/features/auth/presentation/widgets/auth_button.dart';
 import 'package:ticketing/features/auth/presentation/widgets/auth_text_field.dart';
 
@@ -21,7 +21,7 @@ class MerchantOnboardingScreen extends StatefulWidget {
 }
 
 class _MerchantOnboardingScreenState extends State<MerchantOnboardingScreen> {
-  final TextEditingController _businessNameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _businessEmailController =
       TextEditingController();
   final TextEditingController _businessTelephoneController =
@@ -32,24 +32,24 @@ class _MerchantOnboardingScreenState extends State<MerchantOnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    _businessNameController.addListener(_checkFormValidity);
+    _nameController.addListener(_checkFormValidity);
     _businessEmailController.addListener(_checkFormValidity);
     _businessTelephoneController.addListener(_checkFormValidity);
   }
 
   @override
   void dispose() {
-    _businessNameController.removeListener(_checkFormValidity);
+    _nameController.removeListener(_checkFormValidity);
     _businessEmailController.removeListener(_checkFormValidity);
     _businessTelephoneController.removeListener(_checkFormValidity);
-    _businessNameController.dispose();
+    _nameController.dispose();
     _businessEmailController.dispose();
     _businessTelephoneController.dispose();
     super.dispose();
   }
 
   void _checkFormValidity() {
-    final bool allFieldsFilled = _businessNameController.text.isNotEmpty &&
+    final bool allFieldsFilled = _nameController.text.isNotEmpty &&
         _businessEmailController.text.isNotEmpty &&
         _businessTelephoneController.text.isNotEmpty;
 
@@ -74,8 +74,7 @@ class _MerchantOnboardingScreenState extends State<MerchantOnboardingScreen> {
     return BlocListener<MerchantBloc, MerchantState>(
       listener: (context, state) {
         if (state.status == MerchantStatus.success) {
-          // Navigate to main app after successful merchant creation
-          context.router.replaceNamed('/main');
+          context.router.replaceNamed('/payment-setup');
         } else if (state.status == MerchantStatus.error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -174,7 +173,7 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       ),
                       const SizedBox(height: 8),
                       AuthTextField(
-                        controller: _businessNameController,
+                        controller: _nameController,
                         label: 'Enter business name',
                         icon: Icons.business_outlined,
                         validator: (value) {
@@ -317,8 +316,8 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           if (_formKey.currentState!.validate()) {
                             context.read<MerchantBloc>().add(
                                   CreateMerchantEvent(
-                                    businessName:
-                                        _businessNameController.text.trim(),
+                                    name:
+                                        _nameController.text.trim(),
                                     businessEmail:
                                         _businessEmailController.text.trim(),
                                     businessTelephone:

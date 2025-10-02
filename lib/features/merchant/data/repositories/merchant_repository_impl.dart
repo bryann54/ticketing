@@ -4,9 +4,9 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/core/errors/exceptions.dart';
 import 'package:ticketing/core/errors/failures.dart';
-import 'package:ticketing/features/auth/data/datasources/merchant_remote_datasource.dart';
-import 'package:ticketing/features/auth/data/models/merchant_model.dart';
-import 'package:ticketing/features/auth/domain/repositories/merchant_repository.dart';
+import 'package:ticketing/features/merchant/data/datasources/merchant_remote_datasource.dart';
+import 'package:ticketing/features/merchant/data/models/merchant_model.dart';
+import 'package:ticketing/features/merchant/domain/repositories/merchant_repository.dart';
 
 @LazySingleton(as: MerchantRepository)
 class MerchantRepositoryImpl implements MerchantRepository {
@@ -16,13 +16,13 @@ class MerchantRepositoryImpl implements MerchantRepository {
 
   @override
   Future<Either<Failure, MerchantModel>> createMerchant({
-    required String businessName,
+    required String name,
     required String businessEmail,
     required String businessTelephone,
   }) async {
     try {
       final merchant = await _remoteDatasource.createMerchant(
-        businessName: businessName,
+        name: name,
         businessEmail: businessEmail,
         businessTelephone: businessTelephone,
       );

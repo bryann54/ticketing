@@ -18,7 +18,7 @@ import 'package:ticketing/features/auth/presentation/bloc/auth_bloc.dart';
 
 // All other feature Blocs
 import 'package:ticketing/features/account/presentation/bloc/account_bloc.dart';
-import 'package:ticketing/features/auth/presentation/bloc/merchant_bloc.dart';
+import 'package:ticketing/features/merchant/presentation/bloc/merchant_bloc.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
 import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';

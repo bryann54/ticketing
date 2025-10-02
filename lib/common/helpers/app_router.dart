@@ -18,6 +18,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: RegisterRoute.page, path: '/register'),
         AutoRoute(
             page: MerchantOnboardingRoute.page, path: '/merchant-onboarding'),
+        AutoRoute(page: PaymentSetupRoute.page, path: '/payment-setup'),
 
         // Main route with tabs
         AutoRoute(

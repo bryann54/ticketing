@@ -2,11 +2,11 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:ticketing/core/errors/failures.dart';
-import 'package:ticketing/features/auth/data/models/merchant_model.dart';
+import 'package:ticketing/features/merchant/data/models/merchant_model.dart';
 
 abstract class MerchantRepository {
   Future<Either<Failure, MerchantModel>> createMerchant({
-    required String businessName,
+    required String name,
     required String businessEmail,
     required String businessTelephone,
   });

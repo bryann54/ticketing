@@ -1,7 +1,7 @@
-// lib/features/auth/presentation/bloc/merchant_state.dart
+// lib/features/merchant/presentation/bloc/merchant_state.dart
 
 import 'package:equatable/equatable.dart';
-import 'package:ticketing/features/auth/data/models/merchant_model.dart';
+import 'package:ticketing/features/merchant/data/models/merchant_model.dart';
 
 enum MerchantStatus {
   initial,
@@ -29,7 +29,8 @@ class MerchantState extends Equatable {
     return MerchantState(
       status: status ?? this.status,
       merchant: merchant ?? this.merchant,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: errorMessage ??
+          this.errorMessage, 
     );
   }
 
