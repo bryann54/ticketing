@@ -1,4 +1,4 @@
-// lib/features/auth/presentation/bloc/merchant_event.dart
+// lib/features/merchant/presentation/bloc/merchant_event.dart
 
 import 'package:equatable/equatable.dart';
 
@@ -23,3 +23,5 @@ class CreateMerchantEvent extends MerchantEvent {
   @override
   List<Object> get props => [name, businessEmail, businessTelephone];
 }
+
+class GetMerchantDetailsEvent extends MerchantEvent {}

@@ -1,4 +1,4 @@
-// lib/features/auth/data/datasources/merchant_remote_datasource.dart
+// lib/features/merchant/data/datasources/merchant_remote_datasource.dart
 
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -14,6 +14,8 @@ abstract class MerchantRemoteDatasource {
     required String businessEmail,
     required String businessTelephone,
   });
+
+  Future<MerchantModel> getMerchantDetails();
 }
 
 @LazySingleton(as: MerchantRemoteDatasource)
@@ -30,9 +32,7 @@ class MerchantRemoteDatasourceImpl implements MerchantRemoteDatasource {
     required String businessTelephone,
   }) async {
     try {
-      // Get the access token from secure storage
       final accessToken = await _secureStorage.read(key: 'accessToken');
-
       if (accessToken == null) {
         throw ClientException(
             message: 'Not authenticated. Please log in again.');
@@ -47,8 +47,33 @@ class MerchantRemoteDatasourceImpl implements MerchantRemoteDatasource {
         },
         options: Options(
           headers: {
-            'Authorization':
-                'Token $accessToken',
+            'Authorization': 'Token $accessToken',
+          },
+        ),
+      );
+
+      return MerchantModel.fromJson(response);
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message, statusCode: e.statusCode);
+    } on ClientException catch (e) {
+      throw ClientException(message: e.message);
+    }
+  }
+
+  @override
+  Future<MerchantModel> getMerchantDetails() async {
+    try {
+      final accessToken = await _secureStorage.read(key: 'accessToken');
+      if (accessToken == null) {
+        throw ClientException(
+            message: 'Not authenticated. Please log in again.');
+      }
+
+      final response = await _client.get<Map<String, dynamic>>(
+        url: ApiEndpoints.authMerchantsMe,
+        options: Options(
+          headers: {
+            'Authorization': 'Token $accessToken',
           },
         ),
       );

@@ -74,7 +74,7 @@ class _MerchantOnboardingScreenState extends State<MerchantOnboardingScreen> {
     return BlocListener<MerchantBloc, MerchantState>(
       listener: (context, state) {
         if (state.status == MerchantStatus.success) {
-          context.router.replaceNamed('/payment-setup');
+          context.router.replaceNamed('/main');
         } else if (state.status == MerchantStatus.error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

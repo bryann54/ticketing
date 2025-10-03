@@ -10,4 +10,5 @@ abstract class MerchantRepository {
     required String businessEmail,
     required String businessTelephone,
   });
+  Future<Either<Failure, MerchantModel>> getMerchantDetails();
 }
