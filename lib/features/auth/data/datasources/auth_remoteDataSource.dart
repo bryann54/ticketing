@@ -19,6 +19,7 @@ abstract class AuthRemoteDataSource {
   Future<void> changePassword(String currentPassword, String newPassword);
   Future<void> verifyOtp(String email, String otp);
   Future<void> sendOtp(String email);
+  Future<bool> hasValidToken();
 }
 
 @LazySingleton(as: AuthRemoteDataSource)
@@ -31,44 +32,74 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Stream<UserModel?> get authStateChanges async* {
     final token = await _secureStorage.read(key: 'accessToken');
-    if (token != null) {
-      try {
-        // Use merchants/me endpoint to get current user
-        final response = await _apiClient.get<Map<String, dynamic>>(
-          url: ApiEndpoints.authMerchantsMe,
-          options: Options(headers: {'Authorization': 'Bearer $token'}),
+    if (token != null && token.isNotEmpty) {
+      // Token exists, try to get user data from secure storage
+      final userId = await _secureStorage.read(key: 'userId');
+      final email = await _secureStorage.read(key: 'userEmail');
+      final firstName = await _secureStorage.read(key: 'userFirstName');
+      final lastName = await _secureStorage.read(key: 'userLastName');
+
+      if (userId != null && email != null) {
+        yield UserModel(
+          id: userId,
+          email: email,
+          firstName: firstName ?? '',
+          lastName: lastName ?? '',
+          profileImageUrl: null,
         );
-        yield UserModel.fromJson(response);
-      } on ServerException {
-        await _secureStorage.delete(key: 'accessToken');
-        yield null;
-      } on ClientException {
-        yield null;
-      } on Exception {
-        yield null;
+      } else {
+        // Token exists but no user data, still consider authenticated
+        // The user data will be populated on next login
+        yield UserModel(
+          id: 'temp',
+          email: email ?? '',
+          firstName: '',
+          lastName: '',
+          profileImageUrl: null,
+        );
       }
     } else {
       yield null;
     }
   }
-@override
-Future<UserModel> signInWithEmailAndPassword(
+
+  @override
+  Future<bool> hasValidToken() async {
+    final token = await _secureStorage.read(key: 'accessToken');
+    return token != null && token.isNotEmpty;
+  }
+
+  @override
+  Future<UserModel> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       final response = await _apiClient.post<Map<String, dynamic>>(
         url: ApiEndpoints.authLogin,
         payload: {
-          'username': email, // API expects 'username' field, not 'email'
+          'username': email,
           'password': password,
         },
       );
 
-      // Extract token from response - adjust based on actual API response
-      final accessToken =
-          response['token'] as String? ?? response['access_token'] as String?;
+      // Extract token and user data from response
+      final token = response['token'] as String?;
+      final userId = response['user_id']?.toString();
+      final userEmail = response['email'] as String?;
+      final fullname = response['fullname'] as String?;
 
-      if (accessToken != null) {
-        await _secureStorage.write(key: 'accessToken', value: accessToken);
+      if (token != null && token.isNotEmpty) {
+        // Store token and user data
+        await _secureStorage.write(key: 'accessToken', value: token);
+
+        if (userId != null) {
+          await _secureStorage.write(key: 'userId', value: userId);
+        }
+        if (userEmail != null) {
+          await _secureStorage.write(key: 'userEmail', value: userEmail);
+        }
+        if (fullname != null) {
+          await _secureStorage.write(key: 'userFullname', value: fullname);
+        }
       }
 
       // Create user model from response
@@ -87,7 +118,6 @@ Future<UserModel> signInWithEmailAndPassword(
       final formData = FormData.fromMap({
         'email': email,
         'password': password,
-        // Add other fields if required by your API
         if (firstName.isNotEmpty) 'first_name': firstName,
         if (lastName.isNotEmpty) 'last_name': lastName,
         if (profileImage != null)
@@ -100,14 +130,22 @@ Future<UserModel> signInWithEmailAndPassword(
         options: Options(contentType: 'multipart/form-data'),
       );
 
-      // Extract token from response
-      final accessToken = response['token'] as String?;
+      // Extract token and user data from response
+      final token = response['token'] as String?;
+      final userId = response['user_id']?.toString();
+      final userEmail = response['email'] as String?;
 
-      if (accessToken != null) {
-        await _secureStorage.write(key: 'accessToken', value: accessToken);
+      if (token != null && token.isNotEmpty) {
+        await _secureStorage.write(key: 'accessToken', value: token);
+
+        if (userId != null) {
+          await _secureStorage.write(key: 'userId', value: userId);
+        }
+        if (userEmail != null) {
+          await _secureStorage.write(key: 'userEmail', value: userEmail);
+        }
       }
 
-      // Create user model from response
       return UserModel.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message, statusCode: e.statusCode);
@@ -119,8 +157,11 @@ Future<UserModel> signInWithEmailAndPassword(
   @override
   Future<void> signOut() async {
     try {
-      // Clear local storage only since there's no explicit signout endpoint
+      // Clear all stored data
       await _secureStorage.delete(key: 'accessToken');
+      await _secureStorage.delete(key: 'userId');
+      await _secureStorage.delete(key: 'userEmail');
+      await _secureStorage.delete(key: 'userFullname');
     } on Exception catch (e) {
       throw ClientException(message: 'Sign out failed: ${e.toString()}');
     }
@@ -130,8 +171,7 @@ Future<UserModel> signInWithEmailAndPassword(
   Future<void> resetPassword(String email) async {
     try {
       await _apiClient.post<void>(
-        url: ApiEndpoints
-            .authOtp, // Use OTP endpoint for password reset initiation
+        url: ApiEndpoints.authOtp,
         payload: {'email': email},
       );
     } on ServerException catch (e) {

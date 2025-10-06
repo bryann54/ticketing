@@ -124,6 +124,11 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i671.ApiClient>(),
               gh<_i558.FlutterSecureStorage>(),
             ));
+    gh.lazySingleton<_i65.ShowsRemoteDatasource>(
+        () => _i65.ShowsRemoteDatasource(
+              gh<_i671.ApiClient>(),
+              gh<_i558.FlutterSecureStorage>(),
+            ));
     gh.lazySingleton<_i452.MpesaRepository>(
         () => _i153.MpesaRepositoryImpl(gh<_i778.MpesaRemoteDatasource>()));
     gh.lazySingleton<_i758.DioClient>(() => _i758.DioClient(
@@ -137,16 +142,18 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i671.ApiClient>(),
               gh<_i558.FlutterSecureStorage>(),
             ));
+    gh.lazySingleton<_i153.ShowsRepository>(
+        () => _i57.ShowsRepositoryImpl(gh<_i65.ShowsRemoteDatasource>()));
     gh.lazySingleton<_i1067.AccountRepository>(
         () => _i857.AccountRepositoryImpl(gh<_i29.AccountLocalDatasource>()));
     gh.lazySingleton<_i910.VenuesRemoteDatasource>(
         () => _i910.VenuesRemoteDatasource(gh<_i671.ApiClient>()));
-    gh.lazySingleton<_i65.ShowsRemoteDatasource>(
-        () => _i65.ShowsRemoteDatasource(gh<_i671.ApiClient>()));
     gh.lazySingleton<_i993.ChangeLanguageUsecase>(
         () => _i993.ChangeLanguageUsecase(gh<_i1067.AccountRepository>()));
     gh.factory<_i708.AccountBloc>(
         () => _i708.AccountBloc(gh<_i993.ChangeLanguageUsecase>()));
+    gh.lazySingleton<_i630.GetShowsUsecase>(
+        () => _i630.GetShowsUsecase(gh<_i153.ShowsRepository>()));
     gh.factory<_i814.GetMerchantDetailsUseCase>(
         () => _i814.GetMerchantDetailsUseCase(gh<_i90.MerchantRepository>()));
     gh.lazySingleton<_i7.VenuesRepository>(
@@ -159,8 +166,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i661.AddMpesaDetails(gh<_i452.MpesaRepository>()));
     gh.lazySingleton<_i627.GetVenuesUsecase>(
         () => _i627.GetVenuesUsecase(gh<_i7.VenuesRepository>()));
-    gh.lazySingleton<_i153.ShowsRepository>(
-        () => _i57.ShowsRepositoryImpl(gh<_i65.ShowsRemoteDatasource>()));
     gh.factory<_i439.MpesaSetupBloc>(() =>
         _i439.MpesaSetupBloc(addMpesaDetails: gh<_i661.AddMpesaDetails>()));
     gh.lazySingleton<_i46.SignInWithEmailAndPasswordUseCase>(() =>
@@ -179,6 +184,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i46.VerifyOtpUseCase(gh<_i626.AuthRepository>()));
     gh.lazySingleton<_i46.SendOtpUseCase>(
         () => _i46.SendOtpUseCase(gh<_i626.AuthRepository>()));
+    gh.factory<_i204.ShowsBloc>(
+        () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
     gh.factory<_i884.VenuesBloc>(
         () => _i884.VenuesBloc(gh<_i627.GetVenuesUsecase>()));
     gh.factory<_i797.AuthBloc>(() => _i797.AuthBloc(
@@ -197,14 +204,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i909.CreateMerchantUseCase>(),
           gh<_i814.GetMerchantDetailsUseCase>(),
         ));
-    gh.lazySingleton<_i630.GetShowsUsecase>(
-        () => _i630.GetShowsUsecase(gh<_i153.ShowsRepository>()));
     gh.factory<_i202.HomeBloc>(() => _i202.HomeBloc(
           gh<_i153.ShowsRepository>(),
           gh<_i7.VenuesRepository>(),
         ));
-    gh.factory<_i204.ShowsBloc>(
-        () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
     return this;
   }
 }

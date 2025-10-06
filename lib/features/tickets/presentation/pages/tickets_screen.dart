@@ -14,6 +14,10 @@ class TicketsScreen extends StatelessWidget {
       body: Center(
         child: Text('Tickets Screen'),
       ),
+      floatingActionButton: FloatingActionButton.extended(onPressed: () {
+        // Action when button is pressed
+      }, 
+      label: Text('scan Ticket'))
     );
   }
 }

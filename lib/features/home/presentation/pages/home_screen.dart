@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/common/helpers/app_router.gr.dart';
+import 'package:ticketing/common/res/colors.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_event.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_state.dart';
@@ -49,8 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppColors.primaryColor,
         label: const Text('create Event'),
-        icon: const Icon(Icons.add),
+        icon: const Icon(Icons.auto_awesome),
         onPressed: () {
           final state = context.read<HomeBloc>().state;
           if (state is HomeLoaded) {
