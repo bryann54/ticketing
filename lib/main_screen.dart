@@ -71,14 +71,13 @@ class _MainScreenState extends State<MainScreen> {
           onTap: (index) {
             tabsRouter.setActiveIndex(index);
           },
-          // 
+          //
           kIconSize: 24.0,
           kBottomRadius: 28.0,
           notchColor: AppColors.primaryColor,
           itemLabelStyle: TextStyle(
             fontSize: 12.0,
-            color:
-                AppColors.primaryColor,
+            color: AppColors.primaryColor,
           ),
           showShadow: true,
           shadowElevation: 4.0,

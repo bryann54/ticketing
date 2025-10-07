@@ -89,7 +89,6 @@ class _MerchantOnboardingScreenState extends State<MerchantOnboardingScreen> {
         }
       },
       child: Scaffold(
-       
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -103,37 +102,34 @@ class _MerchantOnboardingScreenState extends State<MerchantOnboardingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        
-                        children:[
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
                             Container(
                               width: 60,
                               height: 60,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
                                 image: const DecorationImage(
-                                  image: AssetImage(
-                                      'assets/tickoyako.png'), 
+                                  image: AssetImage('assets/tickoyako.png'),
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                         GestureDetector(
-                          onTap: () => context.router.maybePop(),
-                          child: Text(
-                            'Skip',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.6),
+                            GestureDetector(
+                              onTap: () => context.router.maybePop(),
+                              child: Text(
+                                'Skip',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ]
-                      ),
+                          ]),
                       const SizedBox(height: 24),
                       Text(
                         'Create business account',
@@ -316,8 +312,7 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           if (_formKey.currentState!.validate()) {
                             context.read<MerchantBloc>().add(
                                   CreateMerchantEvent(
-                                    name:
-                                        _nameController.text.trim(),
+                                    name: _nameController.text.trim(),
                                     businessEmail:
                                         _businessEmailController.text.trim(),
                                     businessTelephone:

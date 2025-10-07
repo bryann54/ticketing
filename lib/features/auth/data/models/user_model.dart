@@ -49,7 +49,7 @@ class UserModel extends Equatable {
   static String _parseFirstName(Map<String, dynamic> userData) {
     return userData['first_name'] as String? ??
         userData['firstName'] as String? ??
-        userData['fullname'] as String? ?? 
+        userData['fullname'] as String? ??
         '';
   }
 

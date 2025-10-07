@@ -41,5 +41,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: SeatLayoutRoute.page, path: '/seat-layout'),
         AutoRoute(page: SeatSelectionRoute.page, path: '/seat-selection'),
         AutoRoute(page: AddShowRoute.page, path: '/add-show'),
+        AutoRoute(page: ShowDetailsRoute.page, path: '/show-details'),
+        AutoRoute(page: TicketScanningRoute.page, path: '/ticket-scanning'),
       ];
 }

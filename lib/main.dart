@@ -22,6 +22,7 @@ import 'package:ticketing/features/merchant/presentation/bloc/merchant_bloc.dart
 import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/merchant/presentation/bloc/mpesa_setup_bloc.dart';
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
+import 'package:ticketing/features/tickets/presentation/bloc/tickets_bloc.dart';
 import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';
 
 void main() async {
@@ -42,13 +43,14 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => localeProvider),
         BlocProvider(
-          create: (context) => getIt<AuthBloc>(), 
+          create: (context) => getIt<AuthBloc>(),
         ),
         BlocProvider(create: (context) => getIt<MerchantBloc>()),
         BlocProvider(create: (context) => getIt<HomeBloc>()),
         BlocProvider(create: (context) => getIt<ShowsBloc>()),
         BlocProvider(create: (context) => getIt<VenuesBloc>()),
         BlocProvider(create: (context) => getIt<AccountBloc>()),
+        BlocProvider(create: (context) => getIt<TicketsBloc>()),
         BlocProvider(create: (context) => getIt<MpesaSetupBloc>()),
       ],
       child: MyApp(),

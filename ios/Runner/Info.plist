@@ -8,6 +8,10 @@
     <string>ticketing</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
+    <key>NSCameraUsageDescription</key>
+<string>This app needs camera access to scan QR codes from tickets</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs photo library access to scan QR codes from saved images</string>
     <key>CFBundleIdentifier</key>
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleInfoDictionaryVersion</key>

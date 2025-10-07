@@ -111,9 +111,9 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
                 child: Icon(
                   Icons.lock_reset,
                   size: 32,
-                  color: 
-                     _isEmailValid?AppColors.primaryColor: theme.colorScheme.onSurface
-                          .withValues(alpha: 0.5),
+                  color: _isEmailValid
+                      ? AppColors.primaryColor
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
               const SizedBox(height: 24),
@@ -136,8 +136,7 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   fontSize: 14,
-                  color: theme.colorScheme.onSurface
-                      .withValues(alpha: 0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
               const SizedBox(height: 28),
@@ -234,7 +233,9 @@ class _PasswordResetDialogState extends State<PasswordResetDialog> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              backgroundColor:_isEmailValid?AppColors.primaryColor: Colors.transparent,
+                              backgroundColor: _isEmailValid
+                                  ? AppColors.primaryColor
+                                  : Colors.transparent,
                               shadowColor: Colors.transparent,
                               elevation: 0,
                             ),

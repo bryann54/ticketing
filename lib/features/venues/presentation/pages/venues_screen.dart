@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/common/helpers/app_router.gr.dart';
+import 'package:ticketing/common/res/colors.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_bloc.dart';
 import 'package:ticketing/features/home/presentation/bloc/home_state.dart';
 import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';
@@ -32,10 +33,13 @@ class _VenuesScreenState extends State<VenuesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Available Venues', style: theme.textTheme.titleLarge),
+        title: Text('Available Venues' ,style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: AppColors.secondaryColor,
+        ),),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -58,6 +62,7 @@ class _VenuesScreenState extends State<VenuesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppColors.primaryColor,
         label: const Text('create venue'),
         icon: const Icon(Icons.add),
         onPressed: () {

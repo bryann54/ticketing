@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:ticketing/core/errors/failures.dart';
 import 'package:ticketing/features/merchant/data/models/merchant_model.dart';
 import 'package:ticketing/features/merchant/domain/repositories/merchant_repository.dart';
+
 @lazySingleton
 class CreateMerchantUseCase {
   final MerchantRepository _repository;

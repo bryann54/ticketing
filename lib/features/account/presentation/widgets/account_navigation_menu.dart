@@ -79,11 +79,9 @@ class AccountNavigationMenu extends StatelessWidget {
               _buildMenuItem(
                 context: context,
                 icon: Icons.account_balance_wallet_outlined,
-                title: 'Mpesa creds add', 
+                title: 'Mpesa creds add',
                 onTap: () {
                   context.router.push(const PaymentSetupRoute());
-                
-                      
                 },
               ),
               Divider(indent: 16, endIndent: 16, height: 1),

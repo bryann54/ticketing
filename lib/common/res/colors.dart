@@ -73,7 +73,7 @@ class AppColors {
   static const Color tealMedium = Color(0xFF4DB6AC);
   static const Color tealDark = Color(0xFF00796B);
   static const Color tealExtraDark = Color(0xFF004D40);
-   // Colors
+  // Colors
   static const Color darkBackgroundColor = Color(0xFF121212);
   static const Color lightBackgroundColor = Color(0xFFFAFAFA);
   static const Color darkCardColor = Color(0xFF1E1E1E);

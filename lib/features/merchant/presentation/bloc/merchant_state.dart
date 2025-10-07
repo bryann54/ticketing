@@ -29,8 +29,7 @@ class MerchantState extends Equatable {
     return MerchantState(
       status: status ?? this.status,
       merchant: merchant ?? this.merchant,
-      errorMessage: errorMessage ??
-          this.errorMessage, 
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 

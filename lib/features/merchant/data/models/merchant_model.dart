@@ -4,12 +4,13 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'merchant_model.g.dart';
+
 @JsonSerializable()
 class MerchantModel extends Equatable {
   final String id;
-  final String name; 
-  final String? businessEmail; 
-  final String? businessTelephone; 
+  final String name;
+  final String? businessEmail;
+  final String? businessTelephone;
   final String? image;
 
   const MerchantModel({
@@ -26,10 +27,8 @@ class MerchantModel extends Equatable {
     return MerchantModel(
       id: payload['id']?.toString() ?? '0',
       name: payload['name'] as String? ?? '',
-      businessEmail:
-          payload['email'] as String?, 
-      businessTelephone: payload['phone_number']
-          as String?,
+      businessEmail: payload['email'] as String?,
+      businessTelephone: payload['phone_number'] as String?,
       image: payload['image'] as String?,
     );
   }
@@ -37,7 +36,7 @@ class MerchantModel extends Equatable {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'email': businessEmail, 
+        'email': businessEmail,
         'phone_number': businessTelephone,
         'image': image,
       };

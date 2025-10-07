@@ -25,7 +25,6 @@ class AccountScreen extends StatelessWidget {
     final LocaleProvider provider =
         Provider.of<LocaleProvider>(context, listen: false);
 
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (merchantBloc.state.status == MerchantStatus.initial) {
         merchantBloc.add(GetMerchantDetailsEvent());
@@ -55,13 +54,10 @@ class AccountScreen extends StatelessWidget {
                 children: [
                   _buildMerchantHeader(
                       context, merchantState, merchantBloc, isLoading),
-
                   const SizedBox(height: 24),
-
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child:
-                        AccountNavigationMenu(), 
+                    child: AccountNavigationMenu(),
                   ),
                 ],
               ),

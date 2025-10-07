@@ -64,7 +64,7 @@ class ShowCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: 16),
       child: Material(
         elevation: 8,
-        shadowColor: Colors.black.withValues(alpha:0.15),
+        shadowColor: Colors.black.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(24),
         child: InkWell(
           onTap: onTap,
@@ -149,7 +149,7 @@ class ShowCard extends StatelessWidget {
           colors: [
             Colors.transparent,
             Colors.transparent,
-            Colors.black.withValues(alpha:0.6),
+            Colors.black.withValues(alpha: 0.6),
           ],
         ),
       ),
@@ -189,7 +189,7 @@ class ShowCard extends StatelessWidget {
       child: PopupMenuButton<String>(
         color: Colors.white,
         elevation: 12,
-        shadowColor: Colors.black.withValues(alpha:0.2),
+        shadowColor: Colors.black.withValues(alpha: 0.2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -266,7 +266,7 @@ class ShowCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.15),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -395,10 +395,10 @@ class ShowCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withValues(alpha:0.05),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFFEF4444).withValues(alpha:0.2),
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),

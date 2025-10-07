@@ -76,12 +76,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
-       listener: (context, state) {
+        listener: (context, state) {
           if (state.status == AuthStatus.authenticated) {
             // Navigate to merchant onboarding instead of main app
             context.router.replace(const MerchantOnboardingRoute());
-          }
-           else if (state.status == AuthStatus.error) {
+          } else if (state.status == AuthStatus.error) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

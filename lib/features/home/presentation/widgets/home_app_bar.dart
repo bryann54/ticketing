@@ -1,5 +1,4 @@
 // lib/features/home/presentation/widgets/home_app_bar.dart
-
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -8,66 +7,155 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return AppBar(
       backgroundColor: theme.scaffoldBackgroundColor,
       elevation: 0,
-      title: Text(
-        'Ticketing App',
-        style: theme.textTheme.headlineMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: theme.colorScheme.onSurface,
-        ),
+      toolbarHeight: 70,
+      title: Row(
+        children: [
+          // Logo with subtle shadow
+          Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/logo.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // App name or greeting (optional)
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Discover',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                Text(
+                  'Find your next event',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       actions: [
-        IconButton(
-          icon: Icon(Icons.notifications_none_outlined,
-              color: theme.colorScheme.onSurface),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Notifications tapped!')),
-            );
-          },
+        // Notification badge
+        Stack(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.notifications_none_rounded,
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                size: 24,
+              ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Notifications tapped!')),
+                );
+              },
+            ),
+            // Optional: Add notification badge
+            Positioned(
+              right: 8,
+              top: 8,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 8,
+                  minHeight: 8,
+                ),
+              ),
+            ),
+          ],
         ),
+        const SizedBox(width: 8),
       ],
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
+        preferredSize: const Size.fromHeight(68),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Row(
             children: [
+              // Search bar
               Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Discover shows and venues...',
-                    hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.1),
                     ),
-                    prefixIcon: Icon(Icons.search,
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.8)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: theme.colorScheme.surfaceContainerHighest,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
                   ),
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.onSurface,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search shows, venues...',
+                      hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search_rounded,
+                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        size: 22,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
+              // Filter button
               Container(
+                height: 48,
+                width: 48,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withOpacity(0.2),
+                  ),
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.tune_rounded,
-                      color:
-                          theme.colorScheme.onSurface.withValues(alpha: 0.8)),
+                  icon: Icon(
+                    Icons.tune_rounded,
+                    color: theme.colorScheme.primary,
+                    size: 22,
+                  ),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Filter tapped!')),
@@ -83,5 +171,5 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(120.0);
+  Size get preferredSize => const Size.fromHeight(138);
 }

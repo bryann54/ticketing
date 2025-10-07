@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/core/errors/failures.dart';
 import 'package:ticketing/features/merchant/domain/repositories/mpesa_repository.dart';
+
 @lazySingleton
 class AddMpesaDetails {
   final MpesaRepository repository;

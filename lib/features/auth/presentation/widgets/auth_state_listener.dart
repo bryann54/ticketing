@@ -21,7 +21,6 @@ class AuthStateListener extends StatelessWidget {
     );
   }
 
-
   void _handleAuthState(BuildContext context, AuthState state) {
     switch (state.status) {
       case AuthStatus.authenticated:

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing/common/res/colors.dart';
 
-
 class AuthContainer extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
@@ -21,8 +20,7 @@ class AuthContainer extends StatelessWidget {
     return Container(
       padding: padding ?? const EdgeInsets.all(AppColors.cardPadding),
       decoration: BoxDecoration(
-        color:
-            isDark ? AppColors.darkCardColor : AppColors.lightCardColor,
+        color: isDark ? AppColors.darkCardColor : AppColors.lightCardColor,
         borderRadius: BorderRadius.circular(AppColors.cardBorderRadius),
         boxShadow: [
           BoxShadow(

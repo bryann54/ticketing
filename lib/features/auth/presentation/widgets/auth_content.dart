@@ -8,7 +8,6 @@ import 'package:ticketing/features/auth/presentation/widgets/auth_container.dart
 
 import 'package:ticketing/features/auth/presentation/widgets/terms_privacy_text.dart';
 
-
 class AuthContent extends StatelessWidget {
   const AuthContent({super.key});
 
@@ -28,7 +27,10 @@ class AuthContent extends StatelessWidget {
           // Top spacing
           SizedBox(height: mediaQuery.size.height * 0.1),
 
-          const AuthHeader(title: '',subtitle: '',),
+          const AuthHeader(
+            title: '',
+            subtitle: '',
+          ),
 
           SizedBox(height: mediaQuery.size.height * 0.08),
 

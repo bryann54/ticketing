@@ -24,7 +24,7 @@ class AuthState extends Equatable {
 
   AuthState copyWith({
     AuthStatus? status,
-    UserEntity? user, 
+    UserEntity? user,
     String? errorMessage,
   }) {
     return AuthState(

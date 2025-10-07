@@ -22,14 +22,13 @@ class AuthHeader extends StatelessWidget {
         Container(
           width: 60,
           height: 60,
-        decoration: BoxDecoration(
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             image: const DecorationImage(
               image: AssetImage('assets/tickoyako.png'),
               fit: BoxFit.cover,
             ),
           ),
-        
         ),
         const SizedBox(height: 24),
 

@@ -68,7 +68,6 @@ class AccountHeaderSection extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-               
                 Text(
                   userEmail,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -77,7 +76,7 @@ class AccountHeaderSection extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                 SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   merchant.businessTelephone ?? 'No phone',
                   style: theme.textTheme.bodyMedium?.copyWith(

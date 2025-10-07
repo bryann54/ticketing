@@ -20,7 +20,6 @@ class AuthBottomBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: SafeArea(
-        
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

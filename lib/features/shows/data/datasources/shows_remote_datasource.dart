@@ -32,14 +32,13 @@ class ShowsRemoteDatasource {
   Future<List<ShowModel>> getShows(GetShowsQueryModel query) async {
     final options = await _getAuthOptions();
 
-    // API returns paginated response: {payload: [...], totalPages: 1, ...}
     final response = await _client.get<Map<String, dynamic>>(
-      url: ApiEndpoints.showsAll,
+      url: ApiEndpoints.showsCreate,
       query: query.toJson(),
       options: options,
     );
 
-    // Extract the shows array from the "payload" field
+    // Extract the shows array
     final payload = response['payload'] as List<dynamic>;
 
     final List<ShowModel> shows = payload
@@ -53,7 +52,7 @@ class ShowsRemoteDatasource {
     final options = await _getAuthOptions();
 
     final response = await _client.post<Map<String, dynamic>>(
-      url: ApiEndpoints.showsAll,
+      url: ApiEndpoints.showsCreate,
       payload: show.toJson(),
       options: options,
     );

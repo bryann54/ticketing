@@ -63,6 +63,14 @@ import '../../features/shows/domain/repositories/shows_repository.dart'
     as _i153;
 import '../../features/shows/domain/usecases/get_shows_usecase.dart' as _i630;
 import '../../features/shows/presentation/bloc/shows_bloc.dart' as _i204;
+import '../../features/tickets/data/datasources/tickets_remote_data_source.dart'
+    as _i116;
+import '../../features/tickets/data/repositories/tickets_repository_impl.dart'
+    as _i736;
+import '../../features/tickets/domain/repositories/tickets_repository.dart'
+    as _i1049;
+import '../../features/tickets/domain/usecases/tickets_usecases.dart' as _i507;
+import '../../features/tickets/presentation/bloc/tickets_bloc.dart' as _i755;
 import '../../features/venues/data/datasources/venues_remote_datasource.dart'
     as _i910;
 import '../../features/venues/data/repositories/venues_repository_impl.dart'
@@ -124,6 +132,8 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i671.ApiClient>(),
               gh<_i558.FlutterSecureStorage>(),
             ));
+    gh.lazySingleton<_i116.TicketsRemoteDataSource>(
+        () => _i116.TicketsRemoteDataSourceImpl(gh<_i671.ApiClient>()));
     gh.lazySingleton<_i65.ShowsRemoteDatasource>(
         () => _i65.ShowsRemoteDatasource(
               gh<_i671.ApiClient>(),
@@ -146,10 +156,20 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i57.ShowsRepositoryImpl(gh<_i65.ShowsRemoteDatasource>()));
     gh.lazySingleton<_i1067.AccountRepository>(
         () => _i857.AccountRepositoryImpl(gh<_i29.AccountLocalDatasource>()));
+    gh.lazySingleton<_i1049.TicketsRepository>(
+        () => _i736.TicketsRepositoryImpl(gh<_i116.TicketsRemoteDataSource>()));
     gh.lazySingleton<_i910.VenuesRemoteDatasource>(
         () => _i910.VenuesRemoteDatasource(gh<_i671.ApiClient>()));
     gh.lazySingleton<_i993.ChangeLanguageUsecase>(
         () => _i993.ChangeLanguageUsecase(gh<_i1067.AccountRepository>()));
+    gh.lazySingleton<_i507.ScanTicketUseCase>(
+        () => _i507.ScanTicketUseCase(gh<_i1049.TicketsRepository>()));
+    gh.lazySingleton<_i507.ValidateTicketUseCase>(
+        () => _i507.ValidateTicketUseCase(gh<_i1049.TicketsRepository>()));
+    gh.lazySingleton<_i507.GetScannedTicketsUseCase>(
+        () => _i507.GetScannedTicketsUseCase(gh<_i1049.TicketsRepository>()));
+    gh.lazySingleton<_i507.GetTicketByIdUseCase>(
+        () => _i507.GetTicketByIdUseCase(gh<_i1049.TicketsRepository>()));
     gh.factory<_i708.AccountBloc>(
         () => _i708.AccountBloc(gh<_i993.ChangeLanguageUsecase>()));
     gh.lazySingleton<_i630.GetShowsUsecase>(
@@ -160,6 +180,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1011.VenuesRepositoryImpl(gh<_i910.VenuesRemoteDatasource>()));
     gh.lazySingleton<_i909.CreateMerchantUseCase>(
         () => _i909.CreateMerchantUseCase(gh<_i90.MerchantRepository>()));
+    gh.factory<_i755.TicketsBloc>(() => _i755.TicketsBloc(
+          scanTicketUseCase: gh<_i507.ScanTicketUseCase>(),
+          validateTicketUseCase: gh<_i507.ValidateTicketUseCase>(),
+          getScannedTicketsUseCase: gh<_i507.GetScannedTicketsUseCase>(),
+        ));
     gh.lazySingleton<_i626.AuthRepository>(
         () => _i153.AuthRepositoryImpl(gh<_i167.AuthRemoteDataSource>()));
     gh.lazySingleton<_i661.AddMpesaDetails>(
