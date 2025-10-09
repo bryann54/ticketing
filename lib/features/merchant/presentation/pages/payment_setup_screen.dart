@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing/common/res/colors.dart';
 import 'package:ticketing/features/merchant/presentation/bloc/mpesa_setup_bloc.dart';
 
 @RoutePage()
@@ -70,9 +71,14 @@ class _PaymentSetupScreenState extends State<PaymentSetupScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Add M-Pesa Business Details'),
+            title: const Text('Add M-Pesa Business Details',style: TextStyle(
+              color: AppColors.primaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),),
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
+
             elevation: 0,
           ),
           body: Padding(
@@ -149,6 +155,7 @@ class _PaymentSetupScreenState extends State<PaymentSetupScreen> {
                         : const Text(
                             'Add M-Pesa Details',
                             style: TextStyle(
+                              
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),

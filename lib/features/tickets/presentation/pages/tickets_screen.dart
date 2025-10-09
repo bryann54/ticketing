@@ -79,54 +79,60 @@ class _TicketsScreenState extends State<TicketsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _showScanner ? 'Scan Ticket' : 'Tickets Check',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AppColors.secondaryColor,
+    return RefreshIndicator(
+      onRefresh: () async {
+        await _fetchAvailableShows();
+        context.read<TicketsBloc>().add(const ResetTicketStateEvent());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            _showScanner ? 'Scan Ticket' : 'Tickets Check',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.secondaryColor,
+            ),
           ),
+          leading: _showScanner
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: _stopScanning,
+                )
+              : null,
         ),
-        leading: _showScanner
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: _stopScanning,
-              )
-            : null,
-      ),
-      body: BlocListener<TicketsBloc, TicketsState>(
-        listener: (context, state) {
-          if (state.status == TicketsStatus.scanSuccess) {
-            setState(() {
-              _showScanner = false;
-            });
-            _showTicketResultDialog(context, state.currentTicket!);
-          } else if (state.status == TicketsStatus.scanError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Scan failed'),
-                backgroundColor: Colors.red,
-                action: SnackBarAction(
-                  label: 'Retry',
-                  onPressed: () {
-                    context
-                        .read<TicketsBloc>()
-                        .add(const ResetTicketStateEvent());
-                  },
+        body: BlocListener<TicketsBloc, TicketsState>(
+          listener: (context, state) {
+            if (state.status == TicketsStatus.scanSuccess) {
+              setState(() {
+                _showScanner = false;
+              });
+              _showTicketResultDialog(context, state.currentTicket!);
+            } else if (state.status == TicketsStatus.scanError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage ?? 'Scan failed'),
+                  backgroundColor: Colors.red,
+                  action: SnackBarAction(
+                    label: 'Retry',
+                    onPressed: () {
+                      context
+                          .read<TicketsBloc>()
+                          .add(const ResetTicketStateEvent());
+                    },
+                  ),
                 ),
-              ),
-            );
-          }
-        },
-        child: BlocBuilder<TicketsBloc, TicketsState>(
-          builder: (context, state) {
-            if (_showScanner && _selectedShow != null) {
-              return TicketScanner(showId: _selectedShow!.id?.toString() ?? '');
+              );
             }
-
-            return _buildHomeView(state);
           },
+          child: BlocBuilder<TicketsBloc, TicketsState>(
+            builder: (context, state) {
+              if (_showScanner && _selectedShow != null) {
+                return TicketScanner(showId: _selectedShow!.id?.toString() ?? '');
+              }
+      
+              return _buildHomeView(state);
+            },
+          ),
         ),
       ),
     );

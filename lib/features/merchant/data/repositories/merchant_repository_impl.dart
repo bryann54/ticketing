@@ -49,4 +49,26 @@ class MerchantRepositoryImpl implements MerchantRepository {
       return Left(GeneralFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, MerchantModel>> updateMerchant({
+    required String name,
+    required String businessEmail,
+    required String businessTelephone,
+  }) async {
+    try {
+      final merchant = await _remoteDatasource.updateMerchant(
+        name: name,
+        businessEmail: businessEmail,
+        businessTelephone: businessTelephone,
+      );
+      return Right(merchant);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
+    } on ClientException catch (e) {
+      return Left(ClientFailure(message: e.message));
+    } catch (e) {
+      return Left(GeneralFailure(message: e.toString()));
+    }
+  }
 }

@@ -1,4 +1,4 @@
-// lib/features/account/presentation/widgets/_account_header_section.dart (Updated)
+// lib/features/account/presentation/widgets/account_header_section.dart
 
 import 'package:flutter/material.dart';
 import 'package:ticketing/features/merchant/data/models/merchant_model.dart';
@@ -27,10 +27,12 @@ class AccountHeaderSection extends StatelessWidget {
 
     // A clean, colorful header area
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+      // 💡 Professional change: Added extra bottom padding to lift content
+      // above the collapse point, and removed the fixed bottom radius.
+      padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
+        // Removed explicit borderRadius for clean SliverAppBar integration
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withValues(alpha: 0.1),
@@ -54,14 +56,14 @@ class AccountHeaderSection extends StatelessWidget {
 
           const SizedBox(width: 16),
 
-          // 2. Business Name and Email
+          // Business Name and Email
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   merchant.name,
-                  style: theme.textTheme.titleMedium?.copyWith(
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -76,7 +78,7 @@ class AccountHeaderSection extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   merchant.businessTelephone ?? 'No phone',
                   style: theme.textTheme.bodyMedium?.copyWith(

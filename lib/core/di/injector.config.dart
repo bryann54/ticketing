@@ -52,6 +52,8 @@ import '../../features/merchant/domain/usecases/create_merchant_usecase.dart'
     as _i909;
 import '../../features/merchant/domain/usecases/get_merchant_details_usecase.dart'
     as _i814;
+import '../../features/merchant/domain/usecases/update_merchant_usecase.dart'
+    as _i788;
 import '../../features/merchant/presentation/bloc/merchant_bloc.dart' as _i703;
 import '../../features/merchant/presentation/bloc/mpesa_setup_bloc.dart'
     as _i439;
@@ -180,6 +182,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1011.VenuesRepositoryImpl(gh<_i910.VenuesRemoteDatasource>()));
     gh.lazySingleton<_i909.CreateMerchantUseCase>(
         () => _i909.CreateMerchantUseCase(gh<_i90.MerchantRepository>()));
+    gh.factory<_i788.UpdateMerchantUseCase>(
+        () => _i788.UpdateMerchantUseCase(gh<_i90.MerchantRepository>()));
     gh.factory<_i755.TicketsBloc>(() => _i755.TicketsBloc(
           scanTicketUseCase: gh<_i507.ScanTicketUseCase>(),
           validateTicketUseCase: gh<_i507.ValidateTicketUseCase>(),
@@ -191,6 +195,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i661.AddMpesaDetails(gh<_i452.MpesaRepository>()));
     gh.lazySingleton<_i627.GetVenuesUsecase>(
         () => _i627.GetVenuesUsecase(gh<_i7.VenuesRepository>()));
+    gh.factory<_i703.MerchantBloc>(() => _i703.MerchantBloc(
+          gh<_i909.CreateMerchantUseCase>(),
+          gh<_i814.GetMerchantDetailsUseCase>(),
+          gh<_i788.UpdateMerchantUseCase>(),
+        ));
     gh.factory<_i439.MpesaSetupBloc>(() =>
         _i439.MpesaSetupBloc(addMpesaDetails: gh<_i661.AddMpesaDetails>()));
     gh.lazySingleton<_i46.SignInWithEmailAndPasswordUseCase>(() =>
@@ -224,10 +233,6 @@ extension GetItInjectableX on _i174.GetIt {
           changePasswordUseCase: gh<_i46.ChangePasswordUseCase>(),
           verifyOtpUseCase: gh<_i46.VerifyOtpUseCase>(),
           sendOtpUseCase: gh<_i46.SendOtpUseCase>(),
-        ));
-    gh.factory<_i703.MerchantBloc>(() => _i703.MerchantBloc(
-          gh<_i909.CreateMerchantUseCase>(),
-          gh<_i814.GetMerchantDetailsUseCase>(),
         ));
     gh.factory<_i202.HomeBloc>(() => _i202.HomeBloc(
           gh<_i153.ShowsRepository>(),

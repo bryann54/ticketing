@@ -12,3 +12,15 @@ String getErrorMessage(Failure failure) {
   }
   return 'An unknown error occurred.';
 }
+
+
+// String extension to add 'capitalize' method
+extension StringCasingExtension on String {
+  String capitalize([int start = 0]) {
+    if (isEmpty) return this;
+    if (start < 0 || start >= length) return this;
+    return substring(0, start) +
+        substring(start, start + 1).toUpperCase() +
+        substring(start + 1);
+  }
+}

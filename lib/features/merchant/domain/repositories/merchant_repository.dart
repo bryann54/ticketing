@@ -11,4 +11,9 @@ abstract class MerchantRepository {
     required String businessTelephone,
   });
   Future<Either<Failure, MerchantModel>> getMerchantDetails();
+  Future<Either<Failure, MerchantModel>> updateMerchant({
+    required String name,
+    required String businessEmail,
+    required String businessTelephone,
+  });
 }

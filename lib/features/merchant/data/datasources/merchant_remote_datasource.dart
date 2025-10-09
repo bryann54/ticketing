@@ -16,6 +16,11 @@ abstract class MerchantRemoteDatasource {
   });
 
   Future<MerchantModel> getMerchantDetails();
+  Future<MerchantModel> updateMerchant({
+    required String name,
+    required String businessEmail,
+    required String businessTelephone,
+  });
 }
 
 @LazySingleton(as: MerchantRemoteDatasource)
@@ -59,7 +64,40 @@ class MerchantRemoteDatasourceImpl implements MerchantRemoteDatasource {
       throw ClientException(message: e.message);
     }
   }
+@override
+Future<MerchantModel> updateMerchant({
+  required String name,
+  required String businessEmail,
+  required String businessTelephone,
+}) async {
+  try {
+    final accessToken = await _secureStorage.read(key: 'accessToken');
+    if (accessToken == null) {
+      throw ClientException(
+          message: 'Not authenticated. Please log in again.');
+    }
 
+    final response = await _client.put<Map<String, dynamic>>(
+      url: ApiEndpoints.authMerchantsUpdate,
+      payload: {
+        'name': name,
+        'email': businessEmail,
+        'phone_number': businessTelephone,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Token $accessToken',
+        },
+      ),
+    );
+
+    return MerchantModel.fromJson(response);
+  } on ServerException catch (e) {
+    throw ServerException(message: e.message, statusCode: e.statusCode);
+  } on ClientException catch (e) {
+    throw ClientException(message: e.message);
+  }
+}
   @override
   Future<MerchantModel> getMerchantDetails() async {
     try {

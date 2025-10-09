@@ -7,9 +7,9 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // Add the authorization token as a header, which is standard for Django
+   
     if (authToken.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $authToken';
+      options.headers['Authorization'] = 'Token $authToken';
     }
     super.onRequest(options, handler);
   }

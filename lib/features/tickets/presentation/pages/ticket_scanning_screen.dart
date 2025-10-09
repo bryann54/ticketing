@@ -94,7 +94,7 @@ void _onQRViewCreated(QRViewController controller) {
                 icon: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.arrow_back, color: Colors.white),
@@ -117,7 +117,7 @@ void _onQRViewCreated(QRViewController controller) {
                       end: Alignment.bottomRight,
                       colors: [
                         AppColors.primaryColor,
-                        AppColors.primaryColor.withOpacity(0.8),
+                        AppColors.primaryColor.withValues(alpha: 0.8),
                         Colors.blue.shade700,
                       ],
                     ),
@@ -132,7 +132,7 @@ void _onQRViewCreated(QRViewController controller) {
                           height: 100,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                           ),
                         ),
                       ),
@@ -144,7 +144,7 @@ void _onQRViewCreated(QRViewController controller) {
                           height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                           ),
                         ),
                       ),
@@ -171,7 +171,7 @@ void _onQRViewCreated(QRViewController controller) {
                       height: 400,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(16),

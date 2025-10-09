@@ -25,3 +25,17 @@ class CreateMerchantEvent extends MerchantEvent {
 }
 
 class GetMerchantDetailsEvent extends MerchantEvent {}
+class UpdateMerchantEvent extends MerchantEvent {
+  final String name;
+  final String businessEmail;
+  final String businessTelephone;
+
+  const UpdateMerchantEvent({
+    required this.name,
+    required this.businessEmail,
+    required this.businessTelephone,
+  });
+
+  @override
+  List<Object> get props => [name, businessEmail, businessTelephone];
+}

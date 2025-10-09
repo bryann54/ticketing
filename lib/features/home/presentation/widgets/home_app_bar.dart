@@ -22,7 +22,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -53,7 +53,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Text(
                   'Find your next event',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontSize: 12,
                   ),
                 ),
@@ -69,7 +69,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               icon: Icon(
                 Icons.notifications_none_rounded,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 size: 24,
               ),
               onPressed: () {
@@ -112,18 +112,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: theme.colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.1),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.1),
                     ),
                   ),
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Search shows, venues...',
                       hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                       prefixIcon: Icon(
                         Icons.search_rounded,
-                        color: theme.colorScheme.onSurface.withOpacity(0.5),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         size: 22,
                       ),
                       border: InputBorder.none,
@@ -144,10 +146,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: theme.colorScheme.primary.withOpacity(0.2),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.2),
                   ),
                 ),
                 child: IconButton(

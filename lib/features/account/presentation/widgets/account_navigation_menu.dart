@@ -41,25 +41,14 @@ class AccountNavigationMenu extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Column(
             children: [
-              // _buildMenuItem(
-              //   context: context,
-              //   icon: Icons.check_circle_outline,
-              //   title: 'Account create', // TODO: Use AppLocalizations
-              //   onTap: () {
-              //     // context.router.push(const AccountCreateRoute());
-              //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              //         content: Text('Navigate to Account Create Screen')));
-              //   },
-              // ),
-              // Divider(indent: 16, endIndent: 16, height: 1),
+           
               _buildMenuItem(
                 context: context,
                 icon: Icons.ssid_chart,
-                title: 'Account update', // TODO: Use AppLocalizations
+                title: 'Account update',
                 onTap: () {
-                  // context.router.push(const AccountUpdateRoute());
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Navigate to Account Update Screen')));
+                  context.router.push(const AccountUpdateRoute());
+                
                 },
               ),
             ],
@@ -88,7 +77,7 @@ class AccountNavigationMenu extends StatelessWidget {
               _buildMenuItem(
                 context: context,
                 icon: Icons.auto_fix_high,
-                title: 'Mpesa creds edit', // TODO: Use AppLocalizations
+                title: 'Mpesa creds edit',
                 onTap: () {
                   // context.router.push(const MpesaCredsEditRoute());
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -101,24 +90,7 @@ class AccountNavigationMenu extends StatelessWidget {
 
         const SizedBox(height: 32),
 
-        // --- Group 3: Log Out ---
-        Card(
-          elevation: 1,
-          margin: EdgeInsets.zero,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: _buildMenuItem(
-            context: context,
-            icon: Icons.logout,
-            title: 'Log out', // TODO: Use AppLocalizations
-            iconColor: Colors.red,
-            onTap: () {
-              // TODO: Implement Logout Logic
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Logging out...')));
-            },
-          ),
-        ),
+   
       ],
     );
   }

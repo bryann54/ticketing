@@ -145,7 +145,7 @@ class _TicketScannerState extends State<TicketScanner> {
           right: 16,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -162,7 +162,7 @@ class _TicketScannerState extends State<TicketScanner> {
           builder: (context, state) {
             if (state.status == TicketsStatus.loading) {
               return Container(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 child: const Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -191,7 +191,7 @@ class _TicketScannerState extends State<TicketScanner> {
   Widget _buildScannerOverlay() {
     return ColorFiltered(
       colorFilter: ColorFilter.mode(
-        Colors.black.withOpacity(0.5),
+        Colors.black.withValues(alpha: 0.5),
         BlendMode.srcOut,
       ),
       child: Stack(

@@ -80,7 +80,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
               child:
@@ -121,7 +121,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurfaceVariant
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                         ),
                       ),
                     )
@@ -134,7 +134,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurfaceVariant
-                            .withOpacity(0.3),
+                            .withValues(alpha: 0.3),
                       ),
                     ),
                   Container(
@@ -144,7 +144,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.6),
+                          Colors.black.withValues(alpha: 0.6),
                         ],
                       ),
                     ),
@@ -237,7 +237,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.2),
+                              .withValues(alpha: 0.2),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -247,7 +247,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.4),
+                                        .withValues(alpha: 0.4),
                                   ),
                         ),
                       ],
@@ -272,7 +272,8 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+        color:
+            Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -307,7 +308,7 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -325,7 +326,10 @@ class _ShowDetailsScreenState extends State<ShowDetailsScreen> {
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
                 ),
           ),
         ],

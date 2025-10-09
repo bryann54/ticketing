@@ -3,6 +3,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing/common/res/colors.dart';
+import 'package:ticketing/common/utils/functions.dart';
 import 'package:ticketing/core/errors/failures.dart'; // Import Failure
 import 'package:ticketing/features/shows/presentation/widgets/show_banner.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart'; // Import ShowModel
@@ -34,20 +36,25 @@ class _ShowsScreenState extends State<ShowsScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: _buildAppBar(theme, isDark),
-      body: BlocBuilder<ShowsBloc, ShowsState>(
-        builder: (context, state) {
-          if (state is ShowsLoading) {
-            return _buildLoadingState(theme);
-          } else if (state is ShowsLoaded) {
-            return _buildLoadedState(theme, state.shows);
-          } else if (state is ShowsError) {
-            return _buildErrorState(theme, state.failure);
-          }
-          // Initial state or unhandled states
-          return _buildInitialState(theme);
-        },
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<ShowsBloc>().add(GetShowsEvent(params: GetShowsParams()));
+      },
+      child: Scaffold(
+        appBar: _buildAppBar(theme, isDark),
+        body: BlocBuilder<ShowsBloc, ShowsState>(
+          builder: (context, state) {
+            if (state is ShowsLoading) {
+              return _buildLoadingState(theme);
+            } else if (state is ShowsLoaded) {
+              return _buildLoadedState(theme, state.shows);
+            } else if (state is ShowsError) {
+              return _buildErrorState(theme, state.failure);
+            }
+            // Initial state or unhandled states
+            return _buildInitialState(theme);
+          },
+        ),
       ),
     );
   }
@@ -58,27 +65,15 @@ class _ShowsScreenState extends State<ShowsScreen> {
       backgroundColor: theme.scaffoldBackgroundColor,
       surfaceTintColor: Colors.transparent,
       title: Text(
-        'Available Shows',
-        style: theme.textTheme.titleLarge?.copyWith(
+        'your shows'.capitalize(0),
+        style:TextStyle(
           fontWeight: FontWeight.w600,
           letterSpacing: -0.5,
+          color: AppColors.primaryColor,
         ),
       ),
       centerTitle: true,
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.refresh,
-            color: theme.colorScheme.onSurface,
-          ),
-          onPressed: () {
-            // Allow users to refresh the show list
-            context
-                .read<ShowsBloc>()
-                .add(GetShowsEvent(params: GetShowsParams()));
-          },
-        ),
-      ],
+    
     );
   }
 
