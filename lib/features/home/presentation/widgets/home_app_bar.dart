@@ -1,5 +1,7 @@
 // lib/features/home/presentation/widgets/home_app_bar.dart
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:ticketing/common/helpers/app_router.gr.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -73,9 +75,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 size: 24,
               ),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Notifications tapped!')),
-                );
+             context.router.push(const NotificationsRoute());
               },
             ),
             // Optional: Add notification badge

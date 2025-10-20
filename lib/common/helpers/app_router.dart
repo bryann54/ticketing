@@ -44,5 +44,6 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ShowDetailsRoute.page, path: '/show-details'),
         AutoRoute(page: TicketScanningRoute.page, path: '/ticket-scanning'),
         AutoRoute(page: AccountUpdateRoute.page, path: '/account-update'),
+        AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
       ];
 }
