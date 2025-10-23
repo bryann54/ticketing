@@ -1,0 +1,2 @@
+/Users/user/Desktop/flutter/smartmedia_campaign_app/android/app/.cxx/RelWithDebInfo/686v483s/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/user/Desktop/flutter/smartmedia_campaign_app/android/app/.cxx/RelWithDebInfo/686v483s/armeabi-v7a/CMakeFiles/rebuild_cache.dir
