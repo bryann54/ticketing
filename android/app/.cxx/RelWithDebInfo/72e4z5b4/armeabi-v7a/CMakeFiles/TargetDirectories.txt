@@ -1,2 +1,2 @@
-/Users/user/Desktop/flutter/smartmedia_campaign_app/android/app/.cxx/RelWithDebInfo/72e4z5b4/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/user/Desktop/flutter/smartmedia_campaign_app/android/app/.cxx/RelWithDebInfo/72e4z5b4/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/user/Desktop/flutter/ticketing/android/app/.cxx/RelWithDebInfo/72e4z5b4/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/user/Desktop/flutter/ticketing/android/app/.cxx/RelWithDebInfo/72e4z5b4/armeabi-v7a/CMakeFiles/rebuild_cache.dir
