@@ -55,6 +55,19 @@ class TicketModel {
   @JsonKey(name: 'deleted')
   final bool deleted;
 
+  // Add fields for scanning response
+  @JsonKey(name: 'valid')
+  final bool? valid;
+
+  @JsonKey(name: 'message')
+  final String? message;
+
+  @JsonKey(name: 'checked_in')
+  final bool? checkedIn;
+
+  @JsonKey(name: 'checked_in_at')
+  final String? checkedInAt;
+
   const TicketModel({
     required this.id,
     required this.createdAt,
@@ -72,6 +85,10 @@ class TicketModel {
     this.ticketType,
     this.showId,
     this.seat,
+    this.valid,
+    this.message,
+    this.checkedIn,
+    this.checkedInAt,
   });
 
   factory TicketModel.fromJson(Map<String, dynamic> json) =>
@@ -104,7 +121,11 @@ class TicketModel {
       attendeeName: attendeeName,
       eventDate: eventDate,
       status: status,
-      qrCodeData: id.toString(), // Using ticket ID as QR data
+      qrCodeData: id.toString(),
+      isValid: valid ?? false,
+      message: message,
+      checkedIn: checkedIn ?? false,
+      checkedInAt: checkedInAt,
     );
   }
 }

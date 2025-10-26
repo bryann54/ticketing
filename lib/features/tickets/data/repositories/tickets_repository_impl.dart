@@ -15,9 +15,11 @@ class TicketsRepositoryImpl implements TicketsRepository {
   TicketsRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<Failure, TicketEntity>> scanTicket(String qrCodeData) async {
+  Future<Either<Failure, TicketEntity>> scanTicket(
+      String qrCodeData, String stageId) async {
     try {
-      final ticketModel = await _remoteDataSource.scanTicket(qrCodeData);
+      final ticketModel =
+          await _remoteDataSource.scanTicket(qrCodeData, stageId);
       return Right(ticketModel.toEntity());
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
@@ -29,9 +31,10 @@ class TicketsRepositoryImpl implements TicketsRepository {
   }
 
   @override
-  Future<Either<Failure, void>> validateTicket(String ticketId) async {
+  Future<Either<Failure, void>> validateTicket(
+      String ticketId, String stageId) async {
     try {
-      await _remoteDataSource.validateTicket(ticketId);
+      await _remoteDataSource.validateTicket(ticketId, stageId);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message, statusCode: e.statusCode));
@@ -43,9 +46,10 @@ class TicketsRepositoryImpl implements TicketsRepository {
   }
 
   @override
-  Future<Either<Failure, List<TicketEntity>>> getScannedTickets() async {
+  Future<Either<Failure, List<TicketEntity>>> getScannedTickets(
+      String stageId) async {
     try {
-      final ticketModels = await _remoteDataSource.getScannedTickets();
+      final ticketModels = await _remoteDataSource.getScannedTickets(stageId);
       final tickets = ticketModels.map((model) => model.toEntity()).toList();
       return Right(tickets);
     } on ServerException catch (e) {

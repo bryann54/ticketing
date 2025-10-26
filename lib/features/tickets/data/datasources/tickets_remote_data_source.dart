@@ -7,9 +7,9 @@ import 'package:ticketing/features/tickets/data/models/ticket_model.dart';
 import 'package:ticketing/core/api_client/endpoints/api_endpoints.dart';
 
 abstract class TicketsRemoteDataSource {
-  Future<TicketModel> scanTicket(String qrCodeData);
-  Future<void> validateTicket(String ticketId);
-  Future<List<TicketModel>> getScannedTickets();
+  Future<TicketModel> scanTicket(String qrCodeData, String stageId);
+  Future<void> validateTicket(String ticketId, String stageId);
+  Future<List<TicketModel>> getScannedTickets(String stageId);
   Future<TicketModel> getTicketById(String ticketId);
 }
 
@@ -20,10 +20,10 @@ class TicketsRemoteDataSourceImpl implements TicketsRemoteDataSource {
   TicketsRemoteDataSourceImpl(this._apiClient);
 
   @override
-  Future<TicketModel> scanTicket(String qrCodeData) async {
+  Future<TicketModel> scanTicket(String qrCodeData, String stageId) async {
     try {
       final response = await _apiClient.post<Map<String, dynamic>>(
-        url: ApiEndpoints.showsTicketTypesCreate,
+        url: ApiEndpoints.showsTicketsCustomersCheckin(stageId),
         payload: {
           'qr_code_data': qrCodeData,
         },
@@ -37,10 +37,10 @@ class TicketsRemoteDataSourceImpl implements TicketsRemoteDataSource {
   }
 
   @override
-  Future<void> validateTicket(String ticketId) async {
+  Future<void> validateTicket(String ticketId, String stageId) async {
     try {
       await _apiClient.post<void>(
-        url: ApiEndpoints.showsTicketTypesCreate,
+        url: ApiEndpoints.showsTicketsCustomersCheckin(stageId),
         payload: {
           'ticket_id': ticketId,
         },
@@ -53,10 +53,12 @@ class TicketsRemoteDataSourceImpl implements TicketsRemoteDataSource {
   }
 
   @override
-  Future<List<TicketModel>> getScannedTickets() async {
+  Future<List<TicketModel>> getScannedTickets(String stageId) async {
     try {
+      // Note: You might need a dedicated endpoint for this
+      // Using sales status endpoint as a temporary solution
       final response = await _apiClient.get<List<dynamic>>(
-        url: ApiEndpoints.showsTicketTypesCreate,
+        url: ApiEndpoints.showsTicketsSalesStatus(stageId),
       );
       return response
           .map((item) => TicketModel.fromJson(item as Map<String, dynamic>))
@@ -72,7 +74,7 @@ class TicketsRemoteDataSourceImpl implements TicketsRemoteDataSource {
   Future<TicketModel> getTicketById(String ticketId) async {
     try {
       final response = await _apiClient.get<Map<String, dynamic>>(
-        url: '${ApiEndpoints.showsTicketTypesCreate}/$ticketId',
+        url: ApiEndpoints.showsTicketsDetails(ticketId),
       );
       return TicketModel.fromJson(response);
     } on ServerException catch (e) {

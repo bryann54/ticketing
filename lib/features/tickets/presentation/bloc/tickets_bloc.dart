@@ -36,7 +36,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
       errorMessage: null,
     ));
 
-    final result = await _scanTicketUseCase(event.qrCodeData);
+    final result = await _scanTicketUseCase(event.qrCodeData, event.showId);
 
     result.fold(
       (failure) => emit(state.copyWith(
@@ -61,7 +61,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
       errorMessage: null,
     ));
 
-    final result = await _validateTicketUseCase(event.ticketId);
+    final result = await _validateTicketUseCase(event.ticketId, event.stageId);
 
     result.fold(
       (failure) => emit(state.copyWith(
@@ -83,7 +83,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
       errorMessage: null,
     ));
 
-    final result = await _getScannedTicketsUseCase();
+    final result = await _getScannedTicketsUseCase(event.stageId);
 
     result.fold(
       (failure) => emit(state.copyWith(

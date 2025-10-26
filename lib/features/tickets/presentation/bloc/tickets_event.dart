@@ -21,15 +21,21 @@ class ScanTicketEvent extends TicketsEvent {
 
 class ValidateTicketEvent extends TicketsEvent {
   final String ticketId;
+  final String stageId;
 
-  const ValidateTicketEvent(this.ticketId);
+  const ValidateTicketEvent(this.ticketId, this.stageId);
 
   @override
-  List<Object> get props => [ticketId];
+  List<Object> get props => [ticketId, stageId];
 }
 
 class LoadScannedTicketsEvent extends TicketsEvent {
-  const LoadScannedTicketsEvent();
+  final String stageId;
+
+  const LoadScannedTicketsEvent(this.stageId);
+
+  @override
+  List<Object> get props => [stageId];
 }
 
 class ToggleScannerEvent extends TicketsEvent {

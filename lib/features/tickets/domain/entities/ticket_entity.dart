@@ -11,6 +11,10 @@ class TicketEntity {
   final String? scannedAt;
   final String status;
   final String qrCodeData;
+  final bool isValid;
+  final String? message;
+  final bool checkedIn;
+  final String? checkedInAt;
 
   const TicketEntity({
     required this.id,
@@ -23,5 +27,9 @@ class TicketEntity {
     this.scannedAt,
     required this.status,
     required this.qrCodeData,
+    required this.isValid,
+    this.message,
+    required this.checkedIn,
+    this.checkedInAt,
   });
 }
