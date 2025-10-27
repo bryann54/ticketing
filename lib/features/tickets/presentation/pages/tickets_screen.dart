@@ -57,7 +57,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
       (failure) {
         setState(() {
           _isShowsLoading = false;
-          _showsError = 'Failed to load available shows.';
+          _showsError = 'Failed to load available events.';
         });
       },
       (shows) {
@@ -114,7 +114,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
           fontSize: 18,
         ),
       ),
-      backgroundColor: Colors.white,
+   
       elevation: 1,
       leading: _showScanner
           ? IconButton(

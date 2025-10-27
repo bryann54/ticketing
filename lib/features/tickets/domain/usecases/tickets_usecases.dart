@@ -1,5 +1,4 @@
 // lib/features/tickets/domain/usecases/tickets_usecases.dart
-
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/core/errors/failures.dart';
@@ -44,5 +43,15 @@ class GetTicketByIdUseCase {
 
   Future<Either<Failure, TicketEntity>> call(String ticketId) async {
     return await repository.getTicketById(ticketId);
+  }
+}
+
+@lazySingleton
+class ReserveTicketUseCase {
+  final TicketsRepository repository;
+  ReserveTicketUseCase(this.repository);
+
+  Future<Either<Failure, void>> call(String ticketId) async {
+    return await repository.reserveTicket(ticketId);
   }
 }

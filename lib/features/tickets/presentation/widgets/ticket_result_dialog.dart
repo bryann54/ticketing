@@ -1,7 +1,10 @@
 // lib/features/tickets/presentation/widgets/ticket_result_dialog.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticketing/common/res/colors.dart';
 import 'package:ticketing/features/tickets/domain/entities/ticket_entity.dart';
+import 'package:ticketing/features/tickets/presentation/bloc/tickets_bloc.dart';
+import 'package:ticketing/features/tickets/presentation/bloc/tickets_event.dart';
 
 class TicketResultDialog extends StatelessWidget {
   final TicketEntity ticket;
@@ -10,65 +13,83 @@ class TicketResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine status based on your new status logic
-    final isSuccess = _isTicketValid(ticket.status);
-    final isBooked = ticket.status.toLowerCase() == 'booked';
-    final isReserved = ticket.status.toLowerCase() == 'reserved';
-    final isClosed = ticket.status.toLowerCase() == 'closed';
-
-    return AlertDialog(
-      title: Row(
-        children: [
-          Icon(
-            _getStatusIcon(ticket.status),
-            color: _getStatusColor(ticket.status),
-          ),
-          const SizedBox(width: 8),
-          Text(_getStatusTitle(ticket.status)),
-        ],
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (ticket.eventName.isNotEmpty)
-            _buildInfoRow('Event', ticket.eventName),
-          if (ticket.attendeeName.isNotEmpty)
-            _buildInfoRow('Attendee', ticket.attendeeName),
-          if (ticket.attendeeEmail.isNotEmpty)
-            _buildInfoRow('Email', ticket.attendeeEmail),
-          if (ticket.ticketType.isNotEmpty)
-            _buildInfoRow('Ticket Type', ticket.ticketType),
-          _buildInfoRow('Status', _formatStatus(ticket.status)),
-          _buildInfoRow('Ticket ID', ticket.id),
-          if (ticket.scannedAt != null)
-            _buildInfoRow(
-              'Scanned At',
-              ticket.scannedAt!,
-            ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('OK'),
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context),
+            const SizedBox(height: 16),
+            _buildTicketInfo(),
+            const SizedBox(height: 24),
+            _buildActionButtons(context),
+          ],
         ),
-        if (isSuccess)
-          ElevatedButton(
-            onPressed: () {
-              // Mark ticket as used/validated
-              // context.read<TicketsBloc>().add(ValidateTicketEvent(ticket.id));
-              Navigator.of(context).pop();
-            },
-            child: const Text('Validate Ticket'),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final isSuccess = ticket.isValid && ticket.isPaymentCompleted;
+
+    return Row(
+      children: [
+        Icon(
+          isSuccess ? Icons.check_circle : Icons.error,
+          color: isSuccess ? Colors.green : Colors.orange,
+          size: 32,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isSuccess ? 'Valid Ticket' : 'Ticket Issue',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                isSuccess ? 'Ready for entry' : 'Please review ticket details',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketInfo() {
+    return Column(
+      children: [
+        _buildInfoRow('Event', ticket.eventName),
+        _buildInfoRow('Ticket Type', ticket.ticketTypeName),
+        if (ticket.attendeeName.isNotEmpty)
+          _buildInfoRow('Attendee', ticket.attendeeName),
+        if (ticket.attendeePhone.isNotEmpty)
+          _buildInfoRow('Phone', ticket.attendeePhone),
+        if (ticket.attendeeEmail.isNotEmpty)
+          _buildInfoRow('Email', ticket.attendeeEmail),
+        if (ticket.seatName != null)
+          _buildInfoRow('Seat', '${ticket.seatName} (Row ${ticket.seatRow})'),
+        if (ticket.price != null) _buildInfoRow('Price', '\$${ticket.price}'),
+        _buildInfoRow('Status', _formatStatus(ticket.status)),
+        _buildInfoRow('Payment', _formatPaymentStatus(ticket.paymentStatus)),
       ],
     );
   }
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,69 +97,57 @@ class TicketResultDialog extends StatelessWidget {
             width: 80,
             child: Text(
               '$label:',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(value.isNotEmpty ? value : 'Not available'),
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
         ],
       ),
     );
   }
 
-  bool _isTicketValid(String status) {
-    final lowerStatus = status.toLowerCase();
-    // Define what you consider a "valid" ticket status
-    return lowerStatus == 'booked' || lowerStatus == 'reserved';
-  }
-
-  IconData _getStatusIcon(String status) {
-    final lowerStatus = status.toLowerCase();
-    switch (lowerStatus) {
-      case 'booked':
-        return Icons.check_circle;
-      case 'reserved':
-        return Icons.schedule;
-      case 'closed':
-        return Icons.block;
-      default: // available or other
-        return Icons.error;
-    }
-  }
-
-  Color _getStatusColor(String status) {
-    final lowerStatus = status.toLowerCase();
-    switch (lowerStatus) {
-      case 'booked':
-        return Colors.green;
-      case 'reserved':
-        return Colors.orange;
-      case 'closed':
-        return Colors.red;
-      default: // available or other
-        return Colors.grey;
-    }
-  }
-
-  String _getStatusTitle(String status) {
-    final lowerStatus = status.toLowerCase();
-    switch (lowerStatus) {
-      case 'booked':
-        return 'Ticket Booked';
-      case 'reserved':
-        return 'Ticket Reserved';
-      case 'closed':
-        return 'Ticket Closed';
-      case 'available':
-        return 'Ticket Available';
-      default:
-        return 'Ticket Status';
-    }
+  Widget _buildActionButtons(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Scan Another'),
+          ),
+        ),
+        const SizedBox(width: 12),
+        if (ticket.isValid && !ticket.checkedIn)
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                // Reserve ticket logic
+                context.read<TicketsBloc>().add(ReserveTicketEvent(ticket.id));
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+              ),
+              child: const Text('Reserve Ticket'),
+            ),
+          ),
+      ],
+    );
   }
 
   String _formatStatus(String status) {
+    return status.toUpperCase();
+  }
+
+  String _formatPaymentStatus(String status) {
     return status.toUpperCase();
   }
 }

@@ -1,5 +1,4 @@
 // lib/features/tickets/data/models/ticket_model.dart
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ticketing/features/tickets/domain/entities/ticket_entity.dart';
 
@@ -106,26 +105,28 @@ class TicketModel {
   }
 
   // Convert to entity when needed
-  TicketEntity toEntity({
-    String eventName = '',
-    String attendeeEmail = '',
-    String attendeeName = '',
-    String eventDate = '',
-  }) {
+  TicketEntity toEntity() {
     return TicketEntity(
       id: id.toString(),
       eventId: showId?.toString() ?? '',
-      eventName: eventName,
+      eventName: '', // Will be populated from scan response
       ticketType: ticketType?.toString() ?? '',
-      attendeeEmail: attendeeEmail,
-      attendeeName: attendeeName,
-      eventDate: eventDate,
+      ticketTypeName: '', // Will be populated from scan response
+      attendeeEmail: '', // Will be populated from scan response
+      attendeeName: '', // Will be populated from scan response
+      attendeePhone: '', // Will be populated from scan response
+      eventDate: '', // Will be populated from scan response
       status: status,
       qrCodeData: id.toString(),
       isValid: valid ?? false,
       message: message,
       checkedIn: checkedIn ?? false,
       checkedInAt: checkedInAt,
+      price: price,
+      seatName: null, // Will be populated from scan response
+      seatRow: null, // Will be populated from scan response
+      paymentStatus: '', // Will be populated from scan response
+      paymentId: '', // Will be populated from scan response
     );
   }
 }

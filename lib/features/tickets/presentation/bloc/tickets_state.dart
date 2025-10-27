@@ -12,7 +12,10 @@ enum TicketsStatus {
   validateError,
   loadScannedSuccess,
   loadScannedError,
+  reserveSuccess,
+  reserveError,
 }
+
 
 class TicketsState extends Equatable {
   final TicketsStatus status;

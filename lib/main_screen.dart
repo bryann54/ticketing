@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
         BottomBarItem(
           inActiveItem: const Icon(Icons.movie_filter_outlined),
           activeItem: const Icon(Icons.movie_filter),
-          itemLabel: AppLocalizations.getString(context, 'tickets'),
+          itemLabel: AppLocalizations.getString(context, 'Events'),
         ),
         BottomBarItem(
           inActiveItem: const Icon(Icons.account_circle_outlined),

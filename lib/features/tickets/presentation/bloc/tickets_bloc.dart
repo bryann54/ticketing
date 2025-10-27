@@ -1,5 +1,4 @@
 // lib/features/tickets/presentation/bloc/tickets_bloc.dart
-
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/features/tickets/domain/usecases/tickets_usecases.dart';
@@ -11,19 +10,23 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
   final ScanTicketUseCase _scanTicketUseCase;
   final ValidateTicketUseCase _validateTicketUseCase;
   final GetScannedTicketsUseCase _getScannedTicketsUseCase;
+  final ReserveTicketUseCase _reserveTicketUseCase;
 
   TicketsBloc({
     required ScanTicketUseCase scanTicketUseCase,
     required ValidateTicketUseCase validateTicketUseCase,
     required GetScannedTicketsUseCase getScannedTicketsUseCase,
+    required ReserveTicketUseCase reserveTicketUseCase,
   })  : _scanTicketUseCase = scanTicketUseCase,
         _validateTicketUseCase = validateTicketUseCase,
         _getScannedTicketsUseCase = getScannedTicketsUseCase,
+        _reserveTicketUseCase = reserveTicketUseCase,
         super(const TicketsState()) {
     on<ScanTicketEvent>(_onScanTicket);
     on<ValidateTicketEvent>(_onValidateTicket);
     on<LoadScannedTicketsEvent>(_onLoadScannedTickets);
     on<ResetTicketStateEvent>(_onResetTicketState);
+    on<ReserveTicketEvent>(_onReserveTicket);
   }
 
   Future<void> _onScanTicket(
@@ -36,7 +39,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
       errorMessage: null,
     ));
 
-    final result = await _scanTicketUseCase(event.qrCodeData, event.showId);
+    final result = await _scanTicketUseCase(event.qrCodeData, event.stageId);
 
     result.fold(
       (failure) => emit(state.copyWith(
@@ -48,6 +51,28 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
         status: TicketsStatus.scanSuccess,
         currentTicket: ticket,
         isScanning: false,
+      )),
+    );
+  }
+
+  Future<void> _onReserveTicket(
+    ReserveTicketEvent event,
+    Emitter<TicketsState> emit,
+  ) async {
+    emit(state.copyWith(
+      status: TicketsStatus.loading,
+      errorMessage: null,
+    ));
+
+    final result = await _reserveTicketUseCase(event.ticketId);
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+        status: TicketsStatus.reserveError,
+        errorMessage: failure.message,
+      )),
+      (_) => emit(state.copyWith(
+        status: TicketsStatus.reserveSuccess,
       )),
     );
   }

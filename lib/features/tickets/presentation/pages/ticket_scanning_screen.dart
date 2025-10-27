@@ -1,10 +1,10 @@
 // lib/features/tickets/presentation/pages/ticket_scanning_screen.dart
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:ticketing/common/res/colors.dart';
+import 'package:ticketing/common/utils/permission_utils.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart';
 import 'package:ticketing/features/tickets/domain/entities/ticket_entity.dart';
 import 'package:ticketing/features/tickets/presentation/bloc/tickets_bloc.dart';
@@ -26,28 +26,52 @@ class TicketScanningScreen extends StatefulWidget {
 }
 
 class _TicketScanningScreenState extends State<TicketScanningScreen>
-    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
-  late MobileScannerController _controller;
+    with SingleTickerProviderStateMixin {
+  MobileScannerController? _controller;
   bool _isProcessing = false;
   String? _lastScannedCode;
   late AnimationController _animationController;
   late Animation<double> _scanLineAnimation;
+  bool _hasCameraPermission = false;
+  bool _isPermissionChecked = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _initializeController();
+    _initializeScanner();
     _initializeAnimations();
   }
 
-  void _initializeController() {
+  Future<void> _initializeScanner() async {
+    // Check camera permission first
+    final hasPermission = await PermissionUtils.hasCameraPermission();
+
+    if (!hasPermission) {
+      final granted = await PermissionUtils.requestCameraPermission();
+      setState(() {
+        _hasCameraPermission = granted;
+        _isPermissionChecked = true;
+      });
+
+      if (!granted) return;
+    } else {
+      setState(() {
+        _hasCameraPermission = true;
+        _isPermissionChecked = true;
+      });
+    }
+
+    // Initialize controller only if we have permission
     _controller = MobileScannerController(
       detectionSpeed: DetectionSpeed.normal,
       facing: CameraFacing.back,
       torchEnabled: false,
       formats: [BarcodeFormat.qrCode],
+      returnImage: false,
     );
+
+    // Start the controller
+    _controller?.start();
   }
 
   void _initializeAnimations() {
@@ -60,23 +84,6 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
       begin: 0.0,
       end: 1.0,
     ).animate(_animationController);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!_controller.value.isInitialized) return;
-
-    switch (state) {
-      case AppLifecycleState.resumed:
-        _controller.start();
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.paused:
-      case AppLifecycleState.detached:
-      case AppLifecycleState.hidden:
-        _controller.stop();
-        break;
-    }
   }
 
   void _onBarcodeDetect(BarcodeCapture capture) {
@@ -96,8 +103,11 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
       _lastScannedCode = code;
     });
 
-    final showId = widget.show.id?.toString() ?? '';
-    context.read<TicketsBloc>().add(ScanTicketEvent(code, showId));
+    // Stop scanner temporarily
+    _controller?.stop();
+
+    final stageId = widget.show.id?.toString() ?? '0';
+    context.read<TicketsBloc>().add(ScanTicketEvent(code, stageId));
   }
 
   void _restartScanning() {
@@ -105,11 +115,14 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
       _isProcessing = false;
       _lastScannedCode = null;
     });
+
+    // Restart the scanner
+    _controller?.start();
+
     context.read<TicketsBloc>().add(const ResetTicketStateEvent());
   }
 
   void _autoRestartScanning() {
-    // Auto-restart after a short delay
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         _restartScanning();
@@ -118,13 +131,28 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
   }
 
   Future<void> _toggleTorch() async {
-    await _controller.toggleTorch();
-    setState(() {});
+    if (_controller != null) {
+      await _controller!.toggleTorch();
+      setState(() {});
+    }
   }
 
   Future<void> _switchCamera() async {
-    await _controller.switchCamera();
-    setState(() {});
+    if (_controller != null) {
+      await _controller!.switchCamera();
+      setState(() {});
+    }
+  }
+
+  Future<void> _requestPermission() async {
+    final granted = await PermissionUtils.requestCameraPermission();
+    setState(() {
+      _hasCameraPermission = granted;
+    });
+
+    if (granted) {
+      await _initializeScanner();
+    }
   }
 
   @override
@@ -136,7 +164,6 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
             _showTicketResultDialog(context, state.currentTicket!);
             break;
           case TicketsStatus.scanError:
-            // Auto-restart on error after showing error
             _autoRestartScanning();
             break;
           case TicketsStatus.initial:
@@ -203,7 +230,7 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
               ],
             ),
           ),
-          _buildCameraControls(),
+          if (_hasCameraPermission) _buildCameraControls(),
         ],
       ),
     );
@@ -211,7 +238,12 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
 
   Widget _buildCameraControls() {
     return ValueListenableBuilder(
-      valueListenable: _controller,
+      valueListenable: _controller ??
+          MobileScannerController(
+            detectionSpeed: DetectionSpeed.normal,
+            facing: CameraFacing.back,
+            torchEnabled: false,
+          ),
       builder: (context, value, child) {
         final torchState = value.torchState;
         final isTorchAvailable = torchState != TorchState.unavailable;
@@ -258,12 +290,101 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
   }
 
   Widget _buildScannerContent() {
+    if (!_isPermissionChecked) {
+      return _buildLoadingView('Checking permissions...');
+    }
+
+    if (!_hasCameraPermission) {
+      return _buildPermissionDeniedView();
+    }
+
+    if (_controller == null) {
+      return _buildLoadingView('Initializing camera...');
+    }
+
     return Stack(
       children: [
         _buildScanner(),
         _buildScannerOverlay(),
         _buildStatusOverlay(),
       ],
+    );
+  }
+
+  Widget _buildLoadingView(String message) {
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPermissionDeniedView() {
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.camera_alt_outlined,
+                size: 64,
+                color: Colors.white54,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Camera Permission Required',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'This app needs camera access to scan QR codes from tickets.',
+                style: TextStyle(
+                  color: Colors.white54,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _requestPermission,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Grant Camera Permission'),
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: PermissionUtils.openAppSettings,
+                child: const Text(
+                  'Open Settings',
+                  style: TextStyle(color: Colors.white54),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -286,7 +407,7 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Camera Unavailable',
+                  'Camera Error',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.white,
                       ),
@@ -295,7 +416,7 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'Please check camera permissions',
+                    error.toString(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.white54,
                         ),
@@ -304,12 +425,12 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: () => context.router.maybePop(),
+                  onPressed: _initializeScanner,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Go Back'),
+                  child: const Text('Retry'),
                 ),
               ],
             ),
@@ -347,6 +468,8 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
       ),
     );
   }
+
+
 
   Widget _buildProcessingOverlay() {
     return Column(
@@ -482,11 +605,11 @@ class _TicketScanningScreenState extends State<TicketScanningScreen>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
+
 }
 
 class _ScannerOverlayPainter extends CustomPainter {
