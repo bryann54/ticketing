@@ -1,5 +1,4 @@
 // lib/features/tickets/domain/usecases/tickets_usecases.dart
-
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ticketing/core/errors/failures.dart';
@@ -11,8 +10,9 @@ class ScanTicketUseCase {
   final TicketsRepository repository;
   ScanTicketUseCase(this.repository);
 
-  Future<Either<Failure, TicketEntity>> call(String qrCodeData) async {
-    return await repository.scanTicket(qrCodeData);
+  Future<Either<Failure, TicketEntity>> call(
+      String qrCodeData, String stageId) async {
+    return await repository.scanTicket(qrCodeData, stageId);
   }
 }
 
@@ -21,8 +21,8 @@ class ValidateTicketUseCase {
   final TicketsRepository repository;
   ValidateTicketUseCase(this.repository);
 
-  Future<Either<Failure, void>> call(String ticketId) async {
-    return await repository.validateTicket(ticketId);
+  Future<Either<Failure, void>> call(String ticketId, String stageId) async {
+    return await repository.validateTicket(ticketId, stageId);
   }
 }
 
@@ -31,8 +31,8 @@ class GetScannedTicketsUseCase {
   final TicketsRepository repository;
   GetScannedTicketsUseCase(this.repository);
 
-  Future<Either<Failure, List<TicketEntity>>> call() async {
-    return await repository.getScannedTickets();
+  Future<Either<Failure, List<TicketEntity>>> call(String stageId) async {
+    return await repository.getScannedTickets(stageId);
   }
 }
 
@@ -43,5 +43,15 @@ class GetTicketByIdUseCase {
 
   Future<Either<Failure, TicketEntity>> call(String ticketId) async {
     return await repository.getTicketById(ticketId);
+  }
+}
+
+@lazySingleton
+class ReserveTicketUseCase {
+  final TicketsRepository repository;
+  ReserveTicketUseCase(this.repository);
+
+  Future<Either<Failure, void>> call(String ticketId) async {
+    return await repository.reserveTicket(ticketId);
   }
 }

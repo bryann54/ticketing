@@ -23,6 +23,10 @@ TicketModel _$TicketModelFromJson(Map<String, dynamic> json) => TicketModel(
       ticketType: (json['ticket_type'] as num?)?.toInt(),
       showId: (json['show'] as num?)?.toInt(),
       seat: (json['seat'] as num?)?.toInt(),
+      valid: json['valid'] as bool?,
+      message: json['message'] as String?,
+      checkedIn: json['checked_in'] as bool?,
+      checkedInAt: json['checked_in_at'] as String?,
     );
 
 Map<String, dynamic> _$TicketModelToJson(TicketModel instance) =>
@@ -43,4 +47,8 @@ Map<String, dynamic> _$TicketModelToJson(TicketModel instance) =>
       'updated_at': instance.updatedAt,
       'deleted_at': instance.deletedAt,
       'deleted': instance.deleted,
+      'valid': instance.valid,
+      'message': instance.message,
+      'checked_in': instance.checkedIn,
+      'checked_in_at': instance.checkedInAt,
     };

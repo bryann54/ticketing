@@ -11,26 +11,35 @@ abstract class TicketsEvent extends Equatable {
 
 class ScanTicketEvent extends TicketsEvent {
   final String qrCodeData;
-  final String showId;
+  final String stageId; 
 
-  const ScanTicketEvent(this.qrCodeData, this.showId);
+  const ScanTicketEvent(this.qrCodeData, this.stageId);
 
   @override
-  List<Object> get props => [qrCodeData, showId];
+  List<Object> get props => [qrCodeData, stageId];
 }
 
 class ValidateTicketEvent extends TicketsEvent {
   final String ticketId;
+  final String stageId;
 
-  const ValidateTicketEvent(this.ticketId);
+  const ValidateTicketEvent(this.ticketId, this.stageId);
 
   @override
-  List<Object> get props => [ticketId];
+  List<Object> get props => [ticketId, stageId];
 }
 
 class LoadScannedTicketsEvent extends TicketsEvent {
-  const LoadScannedTicketsEvent();
+  final String stageId;
+
+  const LoadScannedTicketsEvent(this.stageId);
+
+  @override
+  List<Object> get props => [stageId];
 }
+
+
+
 
 class ToggleScannerEvent extends TicketsEvent {
   final bool showScanner;
@@ -43,4 +52,12 @@ class ToggleScannerEvent extends TicketsEvent {
 
 class ResetTicketStateEvent extends TicketsEvent {
   const ResetTicketStateEvent();
+}
+class ReserveTicketEvent extends TicketsEvent {
+  final String ticketId;
+
+  const ReserveTicketEvent(this.ticketId);
+
+  @override
+  List<Object> get props => [ticketId];
 }

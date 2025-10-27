@@ -1,121 +1,167 @@
-// lib/features/tickets/presentation/widgets/available_show_card.dart
-import 'package:auto_route/auto_route.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:ticketing/common/helpers/app_router.gr.dart';
+import 'package:ticketing/common/res/colors.dart';
 import 'package:ticketing/features/shows/data/models/show_model.dart';
 
 class AvailableShowCard extends StatelessWidget {
   final ShowModel show;
+  final VoidCallback? onTap;
 
-  const AvailableShowCard({
+  // Give subtle staggered height variance for Masonry layout
+  final double cardHeight;
+
+  AvailableShowCard({
     super.key,
     required this.show,
-  });
+    this.onTap,
+  }) : cardHeight = 200 + Random().nextDouble() * 60; // 200–260px
 
   @override
   Widget build(BuildContext context) {
-    final dateString =
-        show.date?.toLocal().toString().split(' ')[0] ?? 'Date N/A';
-    final timeString = show.time != null
-        ? '${show.time!.hour.toString().padLeft(2, '0')}:${show.time!.minute.toString().padLeft(2, '0')}'
-        : 'Time N/A';
+    final hasImage = show.banner != null && show.banner!.isNotEmpty;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surface,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
       child: Container(
+        height: cardHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
-            width: 1,
-          ),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: ListTile(
-        
-          onTap: () {
-            context.router.push(ShowDetailsRoute(show: show));
-          },
-          leading: Hero(
-            tag: 'show_banner_${show.id ?? show.name}_${show.hashCode}',
-            child: Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Stack(
-                  children: [
-                    Container(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withValues(alpha: 0.3),
-                      child: show.banner != null && show.banner!.isNotEmpty
-                          ? Image.network(
-                              show.banner!,
-                              fit: BoxFit.cover,
-                              width: 70,
-                              height: 70,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Center(
-                                child: Icon(
-                                  Icons.theaters,
-                                  size: 28,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary
-                                      .withValues(alpha: 0.5),
-                                ),
-                              ),
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                          : Center(
-                              child: Icon(
-                                Icons.theaters,
-                                size: 28,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withValues(alpha: 0.5),
-                              ),
-                            ),
-                    ),
-                    Container(
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // Background image or gradient
+            Positioned.fill(
+              child: hasImage
+                  ? Image.network(
+                      show.banner!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: Colors.grey.shade200,
+                      ),
+                    )
+                  : Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
                           colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.1),
+                            AppColors.primaryColor.withOpacity(0.15),
+                            AppColors.secondaryColor.withOpacity(0.15),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                    ),
+            ),
+
+            // Overlay blur/gradient
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.55),
+                      Colors.black.withOpacity(0.15),
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                ),
+              ),
+            ),
+
+            // Foreground content
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top-left tag (Show type)
+                    if (show.showType != null && show.showType!.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          show.showType!.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    const Spacer(),
+
+                    // Show Name
+                    Text(
+                      show.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    // Date & Time
+                    if (show.date != null)
+                      Text(
+                        _formatShowDateTime(show),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+
+                    const SizedBox(height: 10),
+
+                    // Scan button (glass style)
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.qr_code_scanner,
+                                size: 16, color: Colors.white),
+                            SizedBox(width: 6),
+                            Text(
+                              'Scan',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -124,93 +170,26 @@ class AvailableShowCard extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Text(
-              show.name,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.2,
-                    height: 1.2,
-                  ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          subtitle: Row(
-            children: [
-              Icon(
-                Icons.calendar_today_rounded,
-                size: 13,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.5),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                dateString,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Container(
-                  width: 3,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.3),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.access_time_rounded,
-                size: 13,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withValues(alpha: 0.5),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                timeString,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.7),
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ],
-          ),
-          trailing: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .primaryContainer
-                  .withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              Icons.qr_code_scanner_rounded,
-              size: 14,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  String _formatShowDateTime(ShowModel show) {
+    final List<String> parts = [];
+
+    if (show.date != null) {
+      final date = show.date!;
+      parts.add('${date.day}/${date.month}/${date.year}');
+    }
+
+    if (show.time != null) {
+      final time = show.time!;
+      parts.add(
+          '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}');
+    }
+
+    return parts.join(' • ');
   }
 }

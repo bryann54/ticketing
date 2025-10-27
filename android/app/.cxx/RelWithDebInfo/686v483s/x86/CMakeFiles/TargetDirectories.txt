@@ -1,2 +1,0 @@
-/Users/user/Desktop/flutter/ticketing/android/app/.cxx/RelWithDebInfo/686v483s/x86/CMakeFiles/edit_cache.dir
-/Users/user/Desktop/flutter/ticketing/android/app/.cxx/RelWithDebInfo/686v483s/x86/CMakeFiles/rebuild_cache.dir
