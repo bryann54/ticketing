@@ -1,9 +1,5 @@
 platform :ios, '13.0'
 
-# ✅ REMOVE these conflicting lines:
-# pod 'GoogleUtilities', '~> 8.1'
-# pod 'GoogleMLKit/BarcodeScanning', '~> 7.0'
-
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', {
@@ -31,10 +27,10 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
-  # ✅ ADD this line to enable modular headers
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  
   target 'RunnerTests' do
     inherit! :search_paths
   end
@@ -44,10 +40,11 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     
-    # ✅ ADD this to handle any potential build settings
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      
+      # Fix for the modular header issue
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
     end
   end
 end
