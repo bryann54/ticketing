@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
+import 'package:firebase_storage/firebase_storage.dart' as _i457;
 import 'package:flutter/material.dart' as _i409;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
@@ -63,7 +64,14 @@ import '../../features/shows/data/repositories/shows_repository_impl.dart'
     as _i57;
 import '../../features/shows/domain/repositories/shows_repository.dart'
     as _i153;
+import '../../features/shows/domain/usecases/create_show_usecase.dart' as _i863;
+import '../../features/shows/domain/usecases/delete_show_banner_usecase.dart'
+    as _i884;
+import '../../features/shows/domain/usecases/delete_show_usecase.dart' as _i614;
+import '../../features/shows/domain/usecases/edit_show_usecase.dart' as _i931;
 import '../../features/shows/domain/usecases/get_shows_usecase.dart' as _i630;
+import '../../features/shows/domain/usecases/upload_show_banner_usecase.dart'
+    as _i920;
 import '../../features/shows/presentation/bloc/shows_bloc.dart' as _i204;
 import '../../features/tickets/data/datasources/tickets_remote_data_source.dart'
     as _i116;
@@ -84,6 +92,8 @@ import '../../features/venues/presentation/bloc/venues_bloc.dart' as _i884;
 import '../../features/venues/presentation/pages/venues_screen.dart' as _i697;
 import '../api_client/client/api_client.dart' as _i671;
 import '../api_client/client/dio_client.dart' as _i758;
+import '../storage/firebase_storage_service.dart' as _i476;
+import '../storage/storage_preference_manager%20copy.dart' as _i955;
 import '../storage/storage_preference_manager.dart' as _i934;
 import 'module_injector.dart' as _i759;
 
@@ -105,6 +115,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => registerModules.secureStorage);
+    gh.lazySingleton<_i457.FirebaseStorage>(
+        () => registerModules.firebaseStorage);
+    gh.lazySingleton<_i476.FirebaseStorageService>(
+        () => _i476.FirebaseStorageService(gh<_i457.FirebaseStorage>()));
     gh.factory<_i298.HomeScreen>(() => _i298.HomeScreen(key: gh<_i409.Key>()));
     gh.factory<_i697.VenuesScreen>(
         () => _i697.VenuesScreen(key: gh<_i409.Key>()));
@@ -112,10 +126,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModules.baseUrl,
       instanceName: 'BaseUrl',
     );
+    gh.lazySingleton<_i884.DeleteShowBannerUsecase>(() =>
+        _i884.DeleteShowBannerUsecase(gh<_i476.FirebaseStorageService>()));
+    gh.lazySingleton<_i920.UploadShowBannerUsecase>(() =>
+        _i920.UploadShowBannerUsecase(gh<_i476.FirebaseStorageService>()));
     gh.factory<String>(
       () => registerModules.apiKey,
       instanceName: 'ApiKey',
     );
+    gh.lazySingleton<_i955.SharedPreferencesManager>(
+        () => _i955.SharedPreferencesManager(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i934.SharedPreferencesManager>(
         () => _i934.SharedPreferencesManager(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i29.AccountLocalDatasource>(() =>
@@ -176,12 +196,26 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i507.ReserveTicketUseCase(gh<_i1049.TicketsRepository>()));
     gh.factory<_i708.AccountBloc>(
         () => _i708.AccountBloc(gh<_i993.ChangeLanguageUsecase>()));
+    gh.lazySingleton<_i863.CreateShowUsecase>(
+        () => _i863.CreateShowUsecase(gh<_i153.ShowsRepository>()));
+    gh.lazySingleton<_i931.EditShowUsecase>(
+        () => _i931.EditShowUsecase(gh<_i153.ShowsRepository>()));
+    gh.lazySingleton<_i614.DeleteShowUsecase>(
+        () => _i614.DeleteShowUsecase(gh<_i153.ShowsRepository>()));
     gh.lazySingleton<_i630.GetShowsUsecase>(
         () => _i630.GetShowsUsecase(gh<_i153.ShowsRepository>()));
     gh.factory<_i814.GetMerchantDetailsUseCase>(
         () => _i814.GetMerchantDetailsUseCase(gh<_i90.MerchantRepository>()));
     gh.lazySingleton<_i7.VenuesRepository>(
         () => _i1011.VenuesRepositoryImpl(gh<_i910.VenuesRemoteDatasource>()));
+    gh.factory<_i204.ShowsBloc>(() => _i204.ShowsBloc(
+          gh<_i630.GetShowsUsecase>(),
+          gh<_i863.CreateShowUsecase>(),
+          gh<_i931.EditShowUsecase>(),
+          gh<_i614.DeleteShowUsecase>(),
+          gh<_i920.UploadShowBannerUsecase>(),
+          gh<_i884.DeleteShowBannerUsecase>(),
+        ));
     gh.lazySingleton<_i909.CreateMerchantUseCase>(
         () => _i909.CreateMerchantUseCase(gh<_i90.MerchantRepository>()));
     gh.factory<_i788.UpdateMerchantUseCase>(
@@ -221,8 +255,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i46.VerifyOtpUseCase(gh<_i626.AuthRepository>()));
     gh.lazySingleton<_i46.SendOtpUseCase>(
         () => _i46.SendOtpUseCase(gh<_i626.AuthRepository>()));
-    gh.factory<_i204.ShowsBloc>(
-        () => _i204.ShowsBloc(gh<_i630.GetShowsUsecase>()));
     gh.factory<_i884.VenuesBloc>(
         () => _i884.VenuesBloc(gh<_i627.GetVenuesUsecase>()));
     gh.factory<_i797.AuthBloc>(() => _i797.AuthBloc(

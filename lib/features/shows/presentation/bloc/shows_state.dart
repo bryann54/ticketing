@@ -26,3 +26,34 @@ final class ShowsError extends ShowsState {
   @override
   List<Object> get props => [failure];
 }
+
+final class ShowBannerUploading extends ShowsState {}
+
+final class ShowBannerUploaded extends ShowsState {
+  final String downloadUrl;
+  const ShowBannerUploaded({required this.downloadUrl});
+  @override
+  List<Object> get props => [downloadUrl];
+}
+
+final class ShowCreating extends ShowsState {}
+
+final class ShowCreated extends ShowsState {
+  final ShowModel show;
+  const ShowCreated({required this.show});
+  @override
+  List<Object> get props => [show];
+}
+
+final class ShowEditing extends ShowsState {}
+
+final class ShowEdited extends ShowsState {
+  final ShowModel show;
+  const ShowEdited({required this.show});
+  @override
+  List<Object> get props => [show];
+}
+
+final class ShowDeleting extends ShowsState {}
+
+final class ShowDeleted extends ShowsState {}

@@ -24,9 +24,16 @@ import 'package:ticketing/features/merchant/presentation/bloc/mpesa_setup_bloc.d
 import 'package:ticketing/features/shows/presentation/bloc/shows_bloc.dart';
 import 'package:ticketing/features/tickets/presentation/bloc/tickets_bloc.dart';
 import 'package:ticketing/features/venues/presentation/bloc/venues_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase BEFORE anything else
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   if (kReleaseMode) {
     await dotenv.load(fileName: "env/.env");
@@ -35,7 +42,7 @@ void main() async {
     await dotenv.load(fileName: "env/.dev.env");
   }
 
-  await configureDependencies(); // Initialize GetIt
+  await configureDependencies();
   final localeProvider = LocaleProvider();
 
   runApp(

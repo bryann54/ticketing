@@ -41,8 +41,9 @@ class SeatModel {
   Map<String, dynamic> toJson() => _$SeatModelToJson(this);
 }
 
+// Renamed from ShowModel to ScannedShowModel
 @JsonSerializable()
-class ShowModel {
+class ScannedShowModel {
   final int id;
   final String name;
   final String date;
@@ -51,7 +52,7 @@ class ShowModel {
   final String show_type;
   final String slug;
 
-  ShowModel({
+  ScannedShowModel({
     required this.id,
     required this.name,
     required this.date,
@@ -61,16 +62,16 @@ class ShowModel {
     required this.slug,
   });
 
-  factory ShowModel.fromJson(Map<String, dynamic> json) =>
-      _$ShowModelFromJson(json);
-  Map<String, dynamic> toJson() => _$ShowModelToJson(this);
+  factory ScannedShowModel.fromJson(Map<String, dynamic> json) =>
+      _$ScannedShowModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ScannedShowModelToJson(this);
 }
 
 @JsonSerializable()
 class TicketDetailModel {
   final int id;
   final TicketTypeModel ticket_type;
-  final ShowModel show;
+  final ScannedShowModel show; // Updated reference
   final SeatModel? seat;
   final int price;
   final bool booked;
@@ -97,7 +98,7 @@ class TicketDetailModel {
 class ScanResponseModel {
   final int id;
   final TicketDetailModel ticket;
-  final ShowModel show;
+  final ScannedShowModel show; // Updated reference
   final int number_of_tickets;
   final String phone_number;
   final String email;

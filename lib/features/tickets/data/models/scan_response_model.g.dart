@@ -36,7 +36,8 @@ Map<String, dynamic> _$SeatModelToJson(SeatModel instance) => <String, dynamic>{
       'seat_row': instance.seat_row,
     };
 
-ShowModel _$ShowModelFromJson(Map<String, dynamic> json) => ShowModel(
+ScannedShowModel _$ScannedShowModelFromJson(Map<String, dynamic> json) =>
+    ScannedShowModel(
       id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       date: json['date'] as String,
@@ -46,7 +47,8 @@ ShowModel _$ShowModelFromJson(Map<String, dynamic> json) => ShowModel(
       slug: json['slug'] as String,
     );
 
-Map<String, dynamic> _$ShowModelToJson(ShowModel instance) => <String, dynamic>{
+Map<String, dynamic> _$ScannedShowModelToJson(ScannedShowModel instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'date': instance.date,
@@ -61,7 +63,7 @@ TicketDetailModel _$TicketDetailModelFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       ticket_type:
           TicketTypeModel.fromJson(json['ticket_type'] as Map<String, dynamic>),
-      show: ShowModel.fromJson(json['show'] as Map<String, dynamic>),
+      show: ScannedShowModel.fromJson(json['show'] as Map<String, dynamic>),
       seat: json['seat'] == null
           ? null
           : SeatModel.fromJson(json['seat'] as Map<String, dynamic>),
@@ -88,7 +90,7 @@ ScanResponseModel _$ScanResponseModelFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       ticket:
           TicketDetailModel.fromJson(json['ticket'] as Map<String, dynamic>),
-      show: ShowModel.fromJson(json['show'] as Map<String, dynamic>),
+      show: ScannedShowModel.fromJson(json['show'] as Map<String, dynamic>),
       number_of_tickets: (json['number_of_tickets'] as num).toInt(),
       phone_number: json['phone_number'] as String,
       email: json['email'] as String,
