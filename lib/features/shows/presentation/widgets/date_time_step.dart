@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing/features/shows/presentation/widgets/date_time_tile.dart';
 
-class DateTimeSelector extends StatelessWidget {
+class DateTimeStep extends StatelessWidget {
   final DateTime selectedDate;
   final TimeOfDay selectedTime;
   final VoidCallback onSelectDate;
   final VoidCallback onSelectTime;
 
-  const DateTimeSelector({
+  const DateTimeStep({
     super.key,
     required this.selectedDate,
     required this.selectedTime,
